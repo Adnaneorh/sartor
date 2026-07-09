@@ -2,7 +2,7 @@
 
 Check boxes as tasks complete (Obsidian renders these). One Claude Code session ≈ one sub-phase or less. Each phase ends with a **Definition of Done** — don't start the next phase until it's true.
 
-**Progress: Phase 0 — not started**
+**Progress: Phase 0 — in progress (0.1 done; Obsidian vault step pending)**
 
 ## Timeline at a glance
 
@@ -23,10 +23,11 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 ## Phase 0 — Foundations (est. 2–3 days) · notes: [[brainstorm/phase-0-foundations]]
 
 ### 0.1 Repo & docs
-- [ ] Create Git repo; add `.gitignore` (Node + Python + `.env*`) BEFORE first commit
-- [ ] Drop in `CLAUDE.md` + `docs/` (this folder); first commit
-- [ ] Create `.env.example` (all variable names + where to get each; no real values)
-- [ ] `scripts/check-docs.sh`: automated docs consistency check (pointers, schema names, wikilinks, enums, counts) wired into CI — then PROVE it by seeding one deliberate error, confirming it fails, and reverting
+- [x] Create Git repo; add `.gitignore` (Node + Python + `.env*`) BEFORE first commit
+- [x] Drop in `CLAUDE.md` + `docs/` (this folder); first commit
+- [x] Create `.env.example` (all variable names + where to get each; no real values)
+- [x] `scripts/check-docs.sh`: automated docs consistency check (pointers, schema names, wikilinks, enums, counts) wired into CI — then PROVE it by seeding one deliberate error, confirming it fails, and reverting
+- [x] Dependabot config: weekly npm + pip + github-actions update PRs (added 2026-07-09, approved addition)
 - [ ] Open `docs/` as Obsidian vault (or add to existing vault)
 
 ### 0.2 App scaffold
