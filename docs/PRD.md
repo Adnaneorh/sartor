@@ -1,7 +1,8 @@
-# PRD — "Tinder for Jobs" with Truthful Resume Tailoring
+# PRD — Sartor
+Swipe-based job hunting for Canada with truthful resume tailoring. (Working pitch: "Tinder for jobs, with a tailor built in." Name from the Latin root of *sartorial* — the tailor.)
 
 ## 1. Vision
-A job-hunting command center: swipe through real job offers, track applications, and generate tailored resumes that are truthful, ATS-optimized, and visually identical to the user's original resume. Desktop-first, keyboard-driven, dev-tool aesthetic.
+A job-hunting command center: swipe through real job offers, track applications, and generate tailored resumes that are truthful, ATS-optimized, and visually identical to the user's original resume. Desktop-first and keyboard-driven, with a light, warm, creative-professional identity ("Mockup D" — see DESIGN.md): white canvas, highlighter motif, pill shapes, top navigation; dark "pulse" theme via toggle.
 
 ## 2. Target user & market
 Active job seekers **in Canada** (v1 is Canada-only). All ingestion, filters, and location data are scoped to Canadian jobs. Users apply to many positions and want speed (swipe + keyboard), organization (tracker), and better response rates (tailored resumes) without lying on their CV.
@@ -11,6 +12,7 @@ Active job seekers **in Canada** (v1 is Canada-only). All ingestion, filters, an
 ### 3.1 Persona / Profile
 - **Registration form (PIPEDA-minimized):** full name, email, phone (OPTIONAL), 16+ age confirmation — no full date of birth is ever collected. Country fixed to Canada in v1. Collect nothing without a stated purpose.
 - Onboarding captures: desired roles, **province + cities (see 3.2a)**, remote preference, salary range (CAD), seniority.
+- **Email verification required:** after signup, the user must confirm their email (Supabase Auth "confirm email" enabled) before accessing the app; unverified sessions see only a "check your inbox / resend" screen. Verification emails are Sartor-branded and redirect back to the app.
 - Master resume upload (PDF/DOCX) stored read-only in a private bucket.
 
 ### 3.1a Personality assessment (skippable, swipe-style)
@@ -113,4 +115,4 @@ Modular monolith + one worker:
 - Every job card shows source + posting date and links to the original. Stale jobs marked inactive aggressively.
 
 ## 8. Success criteria for launch
-- A user can: sign up → build persona → complete OR skip the personality test → upload resume → swipe real jobs (dual-signal match scores shown) → apply via deep link → generate an approved tailored PDF that passes all fidelity checks → ask the assistant about their own data.
+- A user can: sign up → confirm email → build persona → complete OR skip the personality test → upload resume → swipe real jobs (dual-signal match scores shown) → apply via deep link → generate an approved tailored PDF that passes all fidelity checks → ask the assistant about their own data.

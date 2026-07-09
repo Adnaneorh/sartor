@@ -27,14 +27,15 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 - [x] Drop in `CLAUDE.md` + `docs/` (this folder); first commit
 - [x] Create `.env.example` (all variable names + where to get each; no real values)
 - [x] `scripts/check-docs.sh`: automated docs consistency check (pointers, schema names, wikilinks, enums, counts) wired into CI — then PROVE it by seeding one deliberate error, confirming it fails, and reverting
-- [x] Dependabot config: weekly npm + pip + github-actions update PRs (added 2026-07-09, approved addition)
+- [x] Enable Dependabot (or Renovate) on the repo — automated update PRs for Next.js, Supabase client, worker deps, and later the Stripe SDK
 - [ ] Open `docs/` as Obsidian vault (or add to existing vault)
 
 ### 0.2 App scaffold
 - [ ] `create-next-app` (TypeScript, App Router, Tailwind)
-- [ ] Install shadcn/ui; init theme with CSS variables from DESIGN.md (dark + light)
-- [ ] `next-themes` toggle working; dark default; no flash on load
+- [ ] Install shadcn/ui; init theme with CSS variables from DESIGN.md (light default + dark "pulse")
+- [ ] `next-themes` toggle working; LIGHT default; no flash on load
 - [ ] Inter + JetBrains Mono via `next/font`
+- [ ] Deploy the skeleton to Vercel on day one (free `.vercel.app` URL, preview deploys per PR). Local dev stays Supabase CLI + Ollama; the deployed shell points at a hosted Supabase FREE-TIER project (created now, seed data only — this becomes the prod project in Phase 5). Catching deploy-only bugs starts NOW, not in Phase 5
 
 ### 0.3 Local backend
 - [ ] Docker Desktop installed (required for Supabase local stack)
@@ -56,10 +57,13 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 ### 1.1 Auth
 - [ ] Supabase Auth: email/password + Google OAuth
 - [ ] Auth pages (sign in/up/out) + protected routes middleware
+- [ ] Email verification: enable "confirm email" in Supabase Auth; customize the email template (Sartor branding, correct redirect URL); unverified users blocked by middleware and shown a "check your inbox" screen with a resend button
+- [ ] Manual test of the verification flow: sign up → receive email → confirm → access granted; unconfirmed account stays blocked. NOTE: Supabase's built-in sender is rate-limited (dev only) — production SMTP is a Phase 5 task
 - [ ] `profiles` row auto-created on signup (trigger)
 - [ ] Manual RLS test with two accounts: A cannot read B's profile
 - [ ] Zod schemas for all API route inputs and forms (pattern established here, reused everywhere)
 - [ ] CI from day one: GitHub Actions runs typecheck + lint on every push (fixture tests join in Phase 3)
+- [ ] Sentry (app) from Phase 1 — free tier, DSN in env vars; worker Sentry joins in Phase 2 when the worker exists
 - [ ] Registration form: full name, email, OPTIONAL phone, 16+ age confirmation — PIPEDA-minimized, NO full DOB — Zod-validated
 
 ### 1.2 Onboarding / persona
@@ -92,16 +96,17 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 - [ ] Tracker page: Saved / Applied / Interviewing / Offer / Closed columns (matches status enum)
 - [ ] Tier-A help: tooltips, empty states, FAQ page
 
-**DoD:** two test users can sign up, onboard, complete OR skip the personality test (scores stored when completed), swipe 50 seeded jobs with keyboard and mouse, see saved jobs in tracker — and cannot see each other's data.
+**DoD:** two test users can sign up, confirm their email (unconfirmed = blocked), onboard, complete OR skip the personality test (scores stored when completed), swipe 50 seeded jobs with keyboard and mouse, see saved jobs in tracker — and cannot see each other's data.
 
 ---
 
 ## Phase 2 — Real jobs (est. 2–3 weeks) · notes: [[brainstorm/phase-2-real-jobs]]
 
 ### 2.1 Worker service
-- [ ] Python worker repo/folder; runs locally; deployable to Railway
+- [ ] Python worker in `worker/` (monorepo — one repo, Railway deploys the subfolder via root-directory setting); runs locally; deployable to Railway
 - [ ] Worker Dockerfile (Python + Playwright/Chromium deps) for Railway
 - [ ] `job_sources` table + registry of initial company slugs
+- [ ] Sentry SDK on the worker (DSN via env) — completes the app+worker coverage started in Phase 1
 
 ### 2.2 Ingestion
 - [ ] Greenhouse board API connector (normalize → `jobs`)
@@ -117,7 +122,7 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 - [ ] Every card shows source + relative posting age ("Greenhouse · posted 3 days ago"), linking to the original
 
 ### 2.3 Apply flow
-- [ ] `apply_mode` column: classify easy/hard at ingest (question-schema validation; aggregators always hard); lane badge on cards; deck filter by lane
+- [ ] `apply_mode` column: classify easy/hard at ingest (question-schema validation; aggregators always hard); lane badge on cards; deck filter by lane; log the REASON a job is classified hard (e.g. which unsupported question type) — this data drives the future easy-lane spec
 - [ ] "Apply" deep-links to real apply_url and moves entry Saved→Applied
 - [ ] Click-time validity check: re-probe source before opening; dead → mark inactive + inform user
 - [ ] Tracker entries link back to live posting; dead postings visually flagged
@@ -185,25 +190,27 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 
 ## Phase 5 — Ship (est. 1–2 weeks) · notes: [[brainstorm/phase-5-ship]]
 
-- [ ] Hosted Supabase project; run migrations; env split (local/prod)
-- [ ] Deploy app to Vercel; worker to Railway; cron verified in prod
+- [ ] Hosted Supabase project (live since Phase 0): run all migrations to current; verify env split (local/prod); upgrade tier if needed
+- [ ] Promote the Vercel deployment (live since Phase 0) to production config; deploy worker to Railway; cron verified in prod
 - [ ] `LLM_PROVIDER=hosted` in prod; key set
-- [ ] Sentry (app + worker)
+- [ ] Verify Sentry (live on app since Phase 1, worker since Phase 2) has prod DSNs and alerting configured
+- [ ] Production email sending: configure custom SMTP in Supabase Auth (e.g. Resend or Postmark free tier) — the built-in sender's rate limits are not launch-safe; re-test the verification flow on the prod domain
 - [ ] Verify Supabase backups/PITR enabled on the hosted project; repo pushed to GitHub
 - [ ] Privacy policy (PIPEDA-conscious) + "delete my account and all data" button (actually deletes files + rows)
 - [ ] Full manual test pass on free `.vercel.app` URL
-- [ ] Buy domain; point at Vercel; SSL green
+- [ ] Verify "Sartor" availability FIRST (domain .ca/.com/.app, CIPO + USPTO trademark, App Store / Play / web search, social handles, French sanity check) — then buy domain; point at Vercel; SSL green
 
 **DoD:** a stranger can complete the full journey (PRD §8) on your domain without your help.
 
 ---
 
 ## Post-launch backlog (not before Phase 5 ships) · notes: [[brainstorm/post-launch]]
-- [ ] Stripe: free vs premium tailoring tier
+- [ ] Stripe: free vs premium tailoring tier — Stripe Checkout only (never touch raw card data); verify webhook signatures on every subscription event; store only customer ID + subscription status, never card details
 - [ ] Assistant Tier C: tool-calling (read-only / confirm-to-act)
 - [ ] pgvector semantic matching (Ollama embeddings) for deck ranking
 - [ ] ⌘K command palette
 - [ ] More sources: Ashby, Workable, SmartRecruiters, JSON-LD career pages
 - [ ] Source Scout: weekly AI discovery of Canadian company boards + deterministic probe verification (AI-LAYER call point 7)
 - [ ] Easy-apply engine: native dynamic form (supported question types), persona prefill, tailored PDF attach, mandatory confirm screen; audit checkpoints 2–4 (daily re-verify, click-time diff, outcome log + auto-demotion)
+- [ ] Streak feature: daily-visit streak (count + last_active on profiles, reset logic, header flame pill per DESIGN) — pill stays hidden until this ships
 - [ ] Mobile polish pass

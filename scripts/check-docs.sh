@@ -22,7 +22,7 @@ pass() { printf 'PASS  %s\n' "$1"; }
 fail() { printf 'FAIL  %s\n' "$1"; FAIL=1; }
 
 echo "== 1. Pointers =="
-for f in CLAUDE.md docs/PRD.md docs/DESIGN.md docs/ROADMAP.md \
+for f in CLAUDE.md BETA-NOTES.md docs/PRD.md docs/DESIGN.md docs/ROADMAP.md \
          docs/DECISIONS.md docs/AI-LAYER.md .env.example scripts/check-docs.sh; do
   if [ -f "$f" ]; then pass "pointer: $f exists"; else fail "pointer: $f MISSING"; fi
 done

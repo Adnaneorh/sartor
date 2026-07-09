@@ -8,8 +8,8 @@ updates:
     schedule:
       interval: "weekly"
 
-  # Python worker — folder created in Phase 2.1; update this path if the
-  # worker ends up somewhere other than /worker.
+  # Python worker — /worker per the monorepo target layout in CLAUDE.md
+  # (folder created in Phase 2.1; Railway deploys it via root-directory setting).
   - package-ecosystem: "pip"
     directory: "/worker"
     schedule:

@@ -20,8 +20,12 @@
 
 ## Change log (approved modifications)
 <!-- One dated line per approved change affecting this phase; full spec lives where the pointer says. Claude Code appends here IN THE SAME SESSION as any approved change (CLAUDE.md workflow rule). -->
+- 2026-07-09 · Production SMTP for auth emails (Resend/Postmark) added to Phase 5; SMTP key added to inventory → ROADMAP Phase 5, CLAUDE.md secrets
+- 2026-07-09 · Audit fix: Phase 5 Supabase task reworded to migrate/verify/upgrade the Phase-0 project; Phase 5 key list now verification-only → ROADMAP Phase 5, CLAUDE.md secrets
+- 2026-07-09 · Phase 5 deploy/Sentry tasks reduced to promotion + verification (both live since Phases 0–2) → ROADMAP Phase 5
 - 2026-07 · Privacy policy is PIPEDA-conscious (Canada, not GDPR); resumes + personality scores are personal information; delete-account removes ALL rows + files → PRD §7, CLAUDE.md rule 15
 - 2026-07 · Verify Supabase backups/PITR on the hosted project → ROADMAP Phase 5
+- 2026-07 · App named **Sartor**; availability verification (domain/trademark/stores/French) is a Phase 5 gate before domain purchase → DECISIONS
 
 ## Open questions
 <!-- Unresolved decisions. When answered, log the choice in [[DECISIONS]]. -->

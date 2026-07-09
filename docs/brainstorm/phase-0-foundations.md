@@ -20,11 +20,14 @@
 
 ## Change log (approved modifications)
 <!-- One dated line per approved change affecting this phase; full spec lives where the pointer says. Claude Code appends here IN THE SAME SESSION as any approved change (CLAUDE.md workflow rule). -->
+- 2026-07-09 · Audit fix: hosted Supabase free-tier project is created in Phase 0 for the deployed skeleton (no ambiguity vs Phase 5); key inventory updated → ROADMAP 0.2, CLAUDE.md secrets
+- 2026-07-09 · Vercel skeleton deploy moved to day one (preview URLs; dev stays local-first) → ROADMAP 0.2
+- 2026-07-09 · Dependabot/Renovate enabled at repo creation → ROADMAP 0.1
+- 2026-07-09 · Dependabot config (weekly npm + pip + github-actions) added to Phase 0.1 scope, approved by Adnane → ROADMAP 0.1
 - 2026-07 · Docker Desktop required for Supabase local stack → ROADMAP 0.3
 - 2026-07 · `.env.example` created day one; secrets protocol → CLAUDE.md 'Secrets & API keys'
 - 2026-07 · `scripts/check-docs.sh` created in Phase 0, wired to CI, proven by a seeded error → CLAUDE.md verification protocol, ROADMAP 0.1
-- 2026-07-09 · Dependabot config (weekly npm + pip + github-actions) added to Phase 0.1 scope, approved by Adnane → ROADMAP 0.1
-- 2026-07-09 · CLAUDE.md golden rule 1 corrected: `personality_profiles` added to the user-owned RLS list (drift vs PRD §5 caught by check-docs.sh on its first run) → CLAUDE.md rule 1
+- 2026-07 · Visual identity replaced: Mockup D (light DEFAULT, white creative, highlighter motif); dark "pulse" via toggle → DESIGN.md rewritten, ROADMAP 0.2
 
 ## Open questions
 <!-- Unresolved decisions. When answered, log the choice in [[DECISIONS]]. -->

@@ -5,7 +5,7 @@ Read this before writing any code. Full details live in `docs/`.
 **Reading order for a new session:** this file → `docs/PRD.md` → the current phase in `docs/ROADMAP.md` → `docs/DESIGN.md` before any UI work → `docs/AI-LAYER.md` before any AI, worker, or guard work. Log to `docs/brainstorm/` (issues) and `docs/daily/` (session end).
 
 ## What this project is
-A desktop-first web app: swipe through real job offers (accept/decline), track applications, and generate truthful, ATS-optimized tailored resumes that preserve the original resume's exact visual design. See `docs/PRD.md`.
+**Sartor** — a desktop-first web app: swipe through real job offers (accept/decline), track applications, and generate truthful, ATS-optimized tailored resumes that preserve the original resume's exact visual design. See `docs/PRD.md`.
 
 ## Stack
 - **App:** Next.js (App Router) + TypeScript, deployed on Vercel
@@ -31,6 +31,7 @@ A desktop-first web app: swipe through real job offers (accept/decline), track a
 13. **Flag sensitive code for careful human review.** When a change touches auth, RLS policies, Storage access, file handling, or (later) payments, explicitly tell the user: "this needs line-by-line review — test with two accounts."
 14. **Freshness is mandatory (PRD 3.2b).** Only jobs posted 0–10 days ago are ever shown: enforce at ingest (discard old/undated), daily pass (`is_fresh`), query time (hard filter on `posted_at`), and apply-click (source re-probe). Never build a deck query without the freshness filter.
 15. **Personality data is sensitive profile data (PRD 3.1a/3.1b).** The RIASEC test is ALWAYS skippable; scores live in `personality_profiles` (user-scoped RLS, included in delete-account, never shared). Matching must degrade gracefully: missing signal → weight 0 + renormalize — never an error, never a misleading score. Registration is PIPEDA-minimized: no full DOB ever, phone optional.
+16. **Explicit CORS lockdown.** Next.js API routes stay same-origin (the default — never loosen it with a wildcard). Any HTTP endpoint the Railway worker exposes must restrict allowed origins to the app's domains only; queue/webhook endpoints verify a shared secret or signature instead of relying on CORS alone.
 
 ## Workflow rules
 - Work on ONE roadmap task at a time (see `docs/ROADMAP.md`). Propose a plan (files to create/modify + why) before writing code for anything non-trivial.
@@ -49,9 +50,11 @@ A desktop-first web app: swipe through real job offers (accept/decline), track a
 
 ## Secrets & API keys (Claude: handle this on the user's behalf)
 Maintain a committed `.env.example` listing every variable name with a placeholder and a comment saying where to obtain it — create it in Phase 0 and update it the moment any new env var is introduced. Never write real values into it or into any committed file; real values go only in gitignored `.env` / `.env.local` (local) or the Vercel/Railway dashboards (production). When a task requires a key the user hasn't provided, do NOT invent or hardcode one: add the variable to `.env.example`, then pause and tell the user exactly what to obtain, from where, and where to paste it. Key inventory by phase:
-- Phase 0: Supabase local keys (printed by `supabase start` → `.env.local`); Ollama needs no key (localhost:11434)
-- Phase 2: Adzuna App ID + App Key (free registration → worker `.env`); Greenhouse/Lever board APIs need no key (public, slugs only); O*NET Web Services key (free registration) ONLY IF the NOC crosswalk uses it — self-hosted RIASEC items need no key
-- Phase 5: hosted Supabase keys, hosted LLM key (e.g. Anthropic), Sentry DSN, Upstash Redis URL + token → Vercel/Railway env dashboards, never files
+- Phase 0: Supabase local keys (printed by `supabase start` → `.env.local`); Ollama needs no key (localhost:11434); Vercel project link + hosted Supabase FREE-TIER keys (anon + service-role → Vercel env dashboard) for the day-one deployed skeleton
+- Phase 1: Sentry DSN for the app (free tier → env vars)
+- Phase 2: Adzuna App ID + App Key (free registration → worker `.env`); Greenhouse/Lever board APIs need no key (public, slugs only); O*NET Web Services key (free registration) ONLY IF the NOC crosswalk uses it — self-hosted RIASEC items need no key; Sentry DSN for the worker
+- Phase 3: Upstash Redis URL + token (rate limiting on upload/tailoring endpoints starts here, not Phase 5)
+- Phase 5: production-grade hosted Supabase config (or upgrade of the Phase 0 free-tier project), hosted LLM key (e.g. Anthropic), SMTP provider API key (Resend/Postmark, for Supabase Auth custom SMTP) → Vercel/Railway env dashboards, never files. Sentry DSNs and Upstash were provisioned in Phases 1–3; Phase 5 only VERIFIES they're set in prod
 - Post-launch: Stripe publishable + secret + webhook secret
 Only `NEXT_PUBLIC_`-prefixed vars may reach the client; of the above, only the Supabase anon key qualifies.
 
@@ -61,3 +64,25 @@ Only `NEXT_PUBLIC_`-prefixed vars may reach the client; of the above, only the S
 - Phase plan & progress tracking: `docs/ROADMAP.md`
 - Decision log: `docs/DECISIONS.md`
 - AI layer, agents, tools, audit loop: `docs/AI-LAYER.md`
+
+## Target repo layout (monorepo — one repo, two deploys)
+```
+sartor/
+├── CLAUDE.md              ← this file (read first, every session)
+├── BETA-NOTES.md          ← beta-clone provenance & change log
+├── .env.example           ← every variable name + where to get it (no real values)
+├── .gitignore             ← Node + Python + .env* (before first commit)
+├── .github/workflows/     ← CI: typecheck, lint, fixture tests, check-docs.sh
+├── scripts/check-docs.sh  ← docs consistency checker (proven by seeded error)
+├── docs/                  ← PRD, ROADMAP, DESIGN, DECISIONS, AI-LAYER,
+│   ├── brainstorm/           brainstorm phase files, daily session logs
+│   └── daily/
+├── app/                   ← Next.js App Router pages/routes (created by create-next-app)
+├── components/ · lib/     ← UI components; lib/llm/ = provider interface (stub|ollama|hosted)
+├── supabase/              ← migrations (every table ships WITH its RLS policy)
+├── worker/                ← Python service (Railway root dir): ingestion cron,
+│   │                        parse/render jobs, probes; own requirements.txt + .env
+│   └── Dockerfile         ← Playwright Chromium + headless LibreOffice
+└── tests/golden/          ← fixture resumes → canonical JSON → canonical PDFs
+```
+Vercel deploys the repo root (Next.js); Railway deploys `worker/`. Docs and code live together so every Claude Code session sees the spec it must obey.

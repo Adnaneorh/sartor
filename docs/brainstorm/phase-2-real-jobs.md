@@ -20,6 +20,8 @@
 
 ## Change log (approved modifications)
 <!-- One dated line per approved change affecting this phase; full spec lives where the pointer says. Claude Code appends here IN THE SAME SESSION as any approved change (CLAUDE.md workflow rule). -->
+- 2026-07-09 · Worker structure decided: monorepo `worker/` subfolder (Railway root-dir deploy) — removes repo-vs-folder ambiguity → ROADMAP 2.1, CLAUDE.md layout
+- 2026-07-09 · Audit fix: worker Sentry task added to 2.1; worker Sentry DSN added to Phase 2 key inventory → ROADMAP 2.1, CLAUDE.md secrets
 - 2026-07 · Canada-only sources: Adzuna country=ca, Canadian slug seeding, Job Bank terms verification → PRD 3.2
 - 2026-07 · Freshness 0–10 days MANDATORY at four layers (+ undated postings excluded) → PRD 3.2b, CLAUDE.md rule 14
 - 2026-07 · Two-lane apply: `apply_mode easy|hard` classified at ingest, lane badge, deck filter → PRD 3.2c

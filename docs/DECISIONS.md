@@ -4,6 +4,30 @@ One dated entry per significant choice. Format: **Decision — alternatives cons
 
 ---
 
+## 2026-07-09 — Monorepo with `worker/` subfolder
+**Decision:** one repository; Next.js at the root (Vercel), Python worker in `worker/` (Railway deploys the subfolder via its root-directory setting). Target layout documented in CLAUDE.md "Where things are".
+**Alternatives:** two repos (app + worker).
+**Why:** a beginner maintaining two repos doubles CI, secrets, and doc-sync surface; the worker imports nothing from the app so a subfolder is clean; Railway supports subfolder deploys natively; every Claude Code session sees spec + all code together.
+
+---
+
+## 2026-07-09 — Beta hardening: early deploy, early Sentry, CORS rule, Dependabot, Stripe security captured
+**Decision:** (1) skeleton deployed to Vercel in Phase 0 (preview URLs from day one) while dev stays local-first; (2) Sentry on the app from Phase 1, worker from Phase 2; (3) new golden rule 16 — explicit CORS lockdown on worker endpoints, API routes stay same-origin; (4) Dependabot/Renovate enabled in Phase 0.1; (5) Stripe security rules (Checkout only, webhook signature verification, store only customer ID + subscription status) written into the post-launch backlog now.
+**Alternatives:** keep deploy + Sentry in Phase 5 (rejected: months of deploy-only and silent-error blind spots); leave CORS/deps/Stripe rules implicit (rejected: implicit rules get forgotten by the time they matter).
+**Why:** absorbed from an external beginner-SaaS security checklist during a plan audit; each patch is near-zero cost and removes a real risk class. Applied on the beta clone only — original docs untouched.
+**Audit addendum (same day, pass-3 review):** integration defects found and fixed — key inventory realigned to the new phase placements (Sentry app→P1, Sentry worker→P2, Upstash→P3 [wrong even pre-patch: rate limiting starts in Phase 3], hosted Supabase free tier→P0); worker Sentry task added to ROADMAP 2.1; Phase 0/Phase 5 hosted-Supabase ambiguity resolved (created P0, hardened P5). Also fixed a pre-existing defect: golden rule 1's user-owned table list was missing `personality_profiles` (PRD §5 had it; rule 15 covered intent but the list was wrong).
+
+---
+
+## 2026-07 — Visual identity: Mockup D (light creative), dark "pulse" via toggle
+**Decision:** the shipped identity is **Mockup D** — warm white canvas, top nav, highlighter motif (mint = matched, amber = gap, red tint = dead), pill shapes, offset tint panels, "vibe match" ring, quiet streak, mono data. Light is the DEFAULT theme; the dark toggle uses Mockup C's "pulse" palette. Supersedes the earlier "dark & sleek dev-tool" identity decision below.
+**Alternatives rejected:** A (pure dark command-center — kept as the dark toggle's ancestor but too austere as the face for the target generation); B (neo-brutalist Gen Z — user verdict: childish; trend-dated, would force a repositioning); C (dark pulse — strong, retained as the dark theme rather than the default).
+
+## 2026-07 — Name: Sartor
+**Decision:** the app is named **Sartor** (Latin root of *sartorial* — the tailor), owning the truthful-tailoring differentiator; reads dev-tool, short, bilingual-safe.
+**Runners-up:** Boreal (Canada identity), Chinook (fresh-opportunity story), Riffle (swipe mechanic), Portage (career metaphor; Portage Ventures conflict risk).
+**Open obligation:** availability NOT yet verified — domain, CIPO/USPTO, app stores, handles, French check are a Phase 5 gate before the domain purchase (ROADMAP Phase 5).
+
 ## 2026-07 — Verification protocol: golden references + assume-broken auditing
 **Decision:** three verification passes of three KINDS (verified edits → automated `scripts/check-docs.sh` in CI → adversarial semantic review with a "defect exists, find it" premise), risk-tiered (full protocol for spec/schema/security/money; pass 1 + script for trivia). Golden references (`tests/golden/`, docs invariants) define perfect; any deviation is a defect. Every checker is proven by a seeded error before being trusted.
 **Alternatives rejected:** three identical re-reads (repeats one failure class, misses the rest); instruction-only sweeps (forgettable in long sessions — the script cannot forget); uniform heavy protocol for trivial edits (turns process into theater, which trains skipping).
@@ -38,7 +62,7 @@ One dated entry per significant choice. Format: **Decision — alternatives cons
 
 **LLM provider interface (stub | ollama | hosted)** — Ollama (Qwen 2.5) makes local dev free/offline and upgrades the stub path to a real pipeline; hosted frontier model for production rephrasing quality; stub powers fixture tests. Also enables future free/premium tiering.
 
-**Dark & sleek dev-tool design, desktop-first, both themes** — see DESIGN.md. Positioning: "job-hunting command center," keyboard-driven, not a Tinder clone visually.
+**Dark & sleek dev-tool design, desktop-first, both themes** — (SUPERSEDED by "Visual identity: Mockup D" above; keyboard-driven command-center positioning retained, dark palette lives on as the toggle theme.)
 
 **Stripe deferred to post-launch** — validate the product first; Stripe over PayPal when the time comes (better dev tooling, subscription primitives).
 
