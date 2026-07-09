@@ -212,6 +212,29 @@ else
   fi
 fi
 
+echo "== 7. Naming =="
+# The product name must appear in the three core spec docs.
+for f in CLAUDE.md docs/PRD.md docs/DESIGN.md; do
+  if grep -q 'Sartor' "$f"; then
+    pass "naming: product name 'Sartor' present in $f"
+  else
+    fail "naming: product name 'Sartor' missing from $f"
+  fi
+done
+# Superseded working names may appear ONLY in docs/DECISIONS.md, where the
+# naming decision legitimately records them as runners-up. Case-sensitive and
+# word-bounded: the PRD's lowercase working pitch ("Tinder for jobs, with a
+# tailor built in") is part of the spec and must NOT be flagged.
+NAME_BAD=0
+for n in 'Tinder for Jobs' 'Boreal' 'Chinook' 'Riffle' 'Portage'; do
+  HITS=$(grep -rnw "$n" CLAUDE.md BETA-NOTES.md docs --include='*.md' 2>/dev/null | grep -v '^docs/DECISIONS.md:')
+  if [ -n "$HITS" ]; then
+    fail "naming: superseded name '$n' outside DECISIONS.md → $(echo "$HITS" | head -n 3 | tr '\n' ' ')"
+    NAME_BAD=1
+  fi
+done
+[ "$NAME_BAD" -eq 0 ] && pass "naming: no superseded working names outside DECISIONS.md"
+
 echo
 if [ "$FAIL" -eq 0 ]; then
   echo "check-docs: ALL CHECKS PASSED"
