@@ -16,7 +16,7 @@ A desktop-first web app: swipe through real job offers (accept/decline), track a
 - **Payments:** Stripe (post-launch, not yet)
 
 ## Golden rules (non-negotiable)
-1. **Every table has Row Level Security.** User-owned tables (`profiles`, `swipes`, `applications`, `resumes`, `resume_versions`) are strictly user-scoped. Shared reference tables (`jobs`, `job_sources`) are read-only to authenticated users; only the worker (service-role key) writes them. New table = RLS policy in the same migration.
+1. **Every table has Row Level Security.** User-owned tables (`profiles`, `personality_profiles`, `swipes`, `applications`, `resumes`, `resume_versions`) are strictly user-scoped. Shared reference tables (`jobs`, `job_sources`) are read-only to authenticated users; only the worker (service-role key) writes them. New table = RLS policy in the same migration.
 2. **Resumes are sensitive data.** Private Storage buckets only, per-user access policies. Never a public bucket, never a public URL.
 3. **Never edit an uploaded resume file in place.** Originals are read-only. Tailoring = parse → rebuild → render to a NEW versioned file.
 4. **Truthful tailoring only.** Keywords must exist in the job description AND match real experience in the resume. Never fabricate skills, titles, dates, employers, or metrics. Gaps get flagged, not filled.
