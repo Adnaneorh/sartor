@@ -1,0 +1,35 @@
+# --- Secrets: never commit env files (CLAUDE.md golden rule 8) ---
+.env
+.env.*
+!.env.example
+
+# --- Node / Next.js (app arrives in Phase 0.2) ---
+node_modules/
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log
+
+# --- Python (worker arrives in Phase 2) ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Supabase local dev (Phase 0.3) ---
+supabase/.branches/
+supabase/.temp/
+
+# --- Obsidian vault workspace state (docs/ opens as a vault) ---
+docs/.obsidian/
+
+# --- OS / editor ---
+.DS_Store
+.idea/
+.claude/settings.local.json
