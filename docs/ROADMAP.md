@@ -2,7 +2,7 @@
 
 Check boxes as tasks complete (Obsidian renders these). One Claude Code session ≈ one sub-phase or less. Each phase ends with a **Definition of Done** — don't start the next phase until it's true.
 
-**Progress: Phase 0 — in progress (0.1 done; Obsidian vault step pending)**
+**Progress: Phase 0 — in progress (0.1 complete except the Obsidian vault step)**
 
 ## Timeline at a glance
 
@@ -26,8 +26,8 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 - [x] Create Git repo; add `.gitignore` (Node + Python + `.env*`) BEFORE first commit
 - [x] Drop in `CLAUDE.md` + `docs/` (this folder); first commit
 - [x] Create `.env.example` (all variable names + where to get each; no real values)
-- [x] `scripts/check-docs.sh`: automated docs consistency check (pointers, schema names, wikilinks, enums, counts) wired into CI — then PROVE it by seeding one deliberate error, confirming it fails, and reverting
-- [x] Enable Dependabot (or Renovate) on the repo — automated update PRs for Next.js, Supabase client, worker deps, and later the Stripe SDK
+- [x] `scripts/check-docs.sh`: automated docs consistency check (pointers, wikilinks, schema names, enums, counts, estimate arithmetic, naming consistency) wired into CI (workflow committed; activates on first GitHub push) — then PROVE it by seeding one deliberate error, confirming it fails, and reverting
+- [x] Enable Dependabot (or Renovate) on the repo — automated update PRs for Next.js, Supabase client, worker deps, and later the Stripe SDK (config committed; activates on first GitHub push)
 - [ ] Open `docs/` as Obsidian vault (or add to existing vault)
 
 ### 0.2 App scaffold

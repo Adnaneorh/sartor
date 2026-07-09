@@ -1,7 +1,8 @@
 # BETA-NOTES.md — Sartor Beta Working Copy
 
-This is the **beta clone** of the Sartor project docs, created 2026-07-09.
-The original files are untouched; all edits happen here.
+Created 2026-07-09 as the **beta clone** of the Sartor project docs; since
+the same-day sync into this repo, this doc set IS the repo's authoritative
+docs. The beta-clone history is preserved in the Change log below.
 
 ## Structure
 - `CLAUDE.md` — repo root (as its own instructions require)

@@ -5,6 +5,7 @@
 
 # --- Node / Next.js (app arrives in Phase 0.2) ---
 node_modules/
+.vercel/
 .next/
 out/
 build/
