@@ -1,0 +1,22 @@
+# Dependabot — weekly dependency update PRs for all three ecosystems.
+# Activates once the repo is pushed to GitHub.
+version: 2
+updates:
+  # Next.js app — package.json lands at the repo root in Phase 0.2.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # Python worker — folder created in Phase 2.1; update this path if the
+  # worker ends up somewhere other than /worker.
+  - package-ecosystem: "pip"
+    directory: "/worker"
+    schedule:
+      interval: "weekly"
+
+  # Keeps .github/workflows action versions (e.g. actions/checkout) current.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
