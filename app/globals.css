@@ -144,8 +144,8 @@
   --text-secondary: #8a8a93;
   --text-muted: #5c5c64;
   --on-accent: #04342c;
-  /* DESIGN.md specifies "color on rgba tint" for dark markers; tint alphas
-     are the one interpolation this file makes (0.08 mint per spec, 0.12 rest) */
+  /* All dark values below are verbatim from DESIGN.md's dark table
+     (surface/violet tint rows added there 2026-07-09, approved) */
   --mint-tint: rgba(0, 212, 138, 0.08);
   --mint-text: #00d48a;
   --violet: #8b7cff;

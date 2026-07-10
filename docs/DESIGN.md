@@ -43,10 +43,11 @@ Personality: **light, warm, creative-professional — youthful but mature.** Whi
 |---|---|
 | --background | #0B0B0D |
 | --surface | #16161A |
+| --surface-tint (pills, quiet fills) | rgba(255,255,255,0.04) |
 | --border / --border-strong | #232328 / #2E2E34 |
 | --text-primary / secondary / muted | #F2F2F4 / #8A8A93 / #5C5C64 |
 | --accent | #00D48A · on-accent #04342C |
-| --violet | #8B7CFF |
+| --violet / --violet-tint | #8B7CFF / rgba(139,124,255,0.12) |
 | --mint-tint | rgba(0,212,138,0.08) · text #00D48A |
 | --amber (gaps) | #EF9F27 on rgba tint |
 | --red (dead/destructive) | #F4526A on rgba tint |
