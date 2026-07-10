@@ -40,7 +40,7 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 ### 0.3 Local backend
 - [x] Docker Desktop installed (required for Supabase local stack)
 - [x] Supabase CLI installed; `supabase init` + `supabase start` (Docker)
-- [x] `.env.local` with local keys; confirm app connects
+- [x] `.env.local` with local keys; stack + keys + `profiles` reachability proven via standalone supabase-js smoke script (the app itself gains its Supabase client in Phase 1.1)
 - [x] First migration: `profiles` table + RLS policy
 
 ### 0.4 Local AI
