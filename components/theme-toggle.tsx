@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 
@@ -8,25 +7,18 @@ import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
 
-  // useTheme is undefined server-side; render a placeholder until mounted
-  // so the toggle never mismatches the hydrated theme.
-  useEffect(() => setMounted(true), []);
-
+  // Icon choice is CSS-driven (dark: variant), so it is correct from the
+  // first paint — the html class is set pre-hydration by next-themes.
   return (
     <Button
       variant="ghost"
       size="icon"
-      className="rounded-pill"
       aria-label="Toggle theme"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
-      {mounted && theme === "dark" ? (
-        <Sun className="size-4" />
-      ) : (
-        <Moon className="size-4" />
-      )}
+      <Sun className="hidden size-4 dark:block" />
+      <Moon className="size-4 dark:hidden" />
     </Button>
   );
 }

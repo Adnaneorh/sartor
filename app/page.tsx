@@ -25,6 +25,7 @@ export default function Home() {
               <li key={tab.label}>
                 <a
                   href="#"
+                  aria-current={tab.active ? "page" : undefined}
                   className={
                     tab.active
                       ? "border-b-2 border-primary pb-1 text-ink"
@@ -61,10 +62,8 @@ export default function Home() {
               dropped 2 days ago
             </p>
             <div className="mt-4 flex gap-2">
-              <Button className="rounded-pill">save role</Button>
-              <Button variant="secondary" className="rounded-pill">
-                full role ↗
-              </Button>
+              <Button>save role</Button>
+              <Button variant="secondary">full role ↗</Button>
             </div>
           </div>
         </div>
