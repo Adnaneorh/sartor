@@ -11,8 +11,13 @@ out/
 build/
 dist/
 *.tsbuildinfo
+next-env.d.ts
+/coverage
+*.pem
 npm-debug.log*
-yarn-error.log
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
 
 # --- Python (worker arrives in Phase 2) ---
 __pycache__/
