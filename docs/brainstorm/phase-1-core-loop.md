@@ -20,6 +20,7 @@
 
 ## Change log (approved modifications)
 <!-- One dated line per approved change affecting this phase; full spec lives where the pointer says. Claude Code appends here IN THE SAME SESSION as any approved change (CLAUDE.md workflow rule). -->
+- 2026-07-09 · GATE at Phase 1 start: deliberate review of the token→shadcn semantic mapping block in app/globals.css (secondary/muted/accent → surface-tint; derived sidebar/chart colors) BEFORE the component build-out — audit #2 most-suspicious-area; every shadcn component inherits these mappings → app/globals.css, phase-0 audit #2
 - 2026-07-09 · Email confirmation added to PRD §8 journey and Phase 1 DoD → PRD §8, ROADMAP Phase 1
 - 2026-07-09 · Email verification made explicit: confirm-email enabled, branded template + redirect, middleware block + resend screen, manual flow test (built-in sender = dev only) → PRD 3.1, ROADMAP 1.1
 - 2026-07-09 · Audit fix: Sentry DSN (app) moved into Phase 1 key inventory → CLAUDE.md secrets
