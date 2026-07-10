@@ -224,6 +224,23 @@
   }
 }
 
+/* DESIGN.md: elevation via 0.5px hairlines, never shadows.
+   Use hairline* INSTEAD of Tailwind border/border-{side} utilities — never
+   combine them on one element (border-width conflicts resolve by cascade
+   order, which is not a contract; audit #2 finding 2). Preflight supplies
+   border-style solid; @layer base supplies border-color var(--border). */
 @utility hairline {
-  border-width: 0.5px; /* DESIGN.md: elevation via hairlines, never shadows */
+  border-width: 0.5px;
+}
+@utility hairline-t {
+  border-top-width: 0.5px;
+}
+@utility hairline-b {
+  border-bottom-width: 0.5px;
+}
+@utility hairline-l {
+  border-left-width: 0.5px;
+}
+@utility hairline-r {
+  border-right-width: 0.5px;
 }

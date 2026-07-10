@@ -15,7 +15,7 @@ const TABS = [
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="hairline border-b bg-surface">
+      <header className="hairline-b bg-surface">
         <nav className="mx-auto flex h-14 w-full max-w-5xl items-center gap-8 px-6">
           <span className="text-lg font-medium tracking-tight text-ink">
             sartor<span className="text-primary">.</span>
@@ -51,7 +51,7 @@ export default function Home() {
             aria-hidden
             className="absolute inset-0 translate-x-1.5 translate-y-1.5 rounded-card bg-mint-tint"
           />
-          <div className="hairline relative rounded-card border bg-card p-6">
+          <div className="hairline relative rounded-card bg-card p-6">
             <p className="text-base font-medium text-ink">Frontend Developer</p>
             <p className="mt-1 text-text-secondary">
               Example Co · Toronto, ON ·{" "}
