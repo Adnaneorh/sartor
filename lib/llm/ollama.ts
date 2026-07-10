@@ -8,25 +8,39 @@ import { LlmOutputInvalidError } from "./types";
 
 const BASE_URL = () => process.env.OLLAMA_BASE_URL ?? "http://localhost:11434";
 const MODEL = () => process.env.OLLAMA_MODEL ?? "qwen2.5:7b";
+// A hung Ollama must fail loudly, never block a pipeline (audit #3 finding 4).
+// 120s covers cold model load + generation on the 7b with headroom.
+const TIMEOUT_MS = 120_000;
 
 export const ollamaProvider: LlmProvider = {
   name: "ollama",
   async completeJson<T>(
     opts: CompleteJsonOptions<T>
   ): Promise<CompleteJsonResult<T>> {
-    const res = await fetch(`${BASE_URL()}/api/chat`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: MODEL(),
-        format: "json",
-        stream: false,
-        messages: [
-          ...(opts.system ? [{ role: "system", content: opts.system }] : []),
-          { role: "user", content: opts.prompt },
-        ],
-      }),
-    });
+    let res: Response;
+    try {
+      res = await fetch(`${BASE_URL()}/api/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+        body: JSON.stringify({
+          model: MODEL(),
+          format: "json",
+          stream: false,
+          messages: [
+            ...(opts.system ? [{ role: "system", content: opts.system }] : []),
+            { role: "user", content: opts.prompt },
+          ],
+        }),
+      });
+    } catch (e) {
+      if (e instanceof DOMException && e.name === "TimeoutError") {
+        throw new Error(
+          `Ollama did not respond within ${TIMEOUT_MS / 1000}s (model ${MODEL()} at ${BASE_URL()}) — is the server hung?`
+        );
+      }
+      throw e;
+    }
     if (!res.ok) {
       throw new Error(`Ollama request failed: ${res.status} ${await res.text()}`);
     }
