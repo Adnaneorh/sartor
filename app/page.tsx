@@ -37,7 +37,12 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          <ThemeToggle />
+          <div className="flex items-center gap-3">
+            <a href="/signin" className="text-sm text-text-secondary hover:text-ink">
+              sign in
+            </a>
+            <ThemeToggle />
+          </div>
         </nav>
       </header>
 

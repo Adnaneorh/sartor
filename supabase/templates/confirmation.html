@@ -1,0 +1,23 @@
+<!-- Sartor confirmation email. Inline styles only (email clients); light
+     theme values mirror DESIGN.md tokens — emails cannot use CSS vars. -->
+<div style="background:#FDFDFB;padding:40px 16px;font-family:Helvetica,Arial,sans-serif;">
+  <div style="max-width:440px;margin:0 auto;background:#FFFFFF;border:1px solid #E7E7E2;border-radius:16px;padding:32px;">
+    <p style="font-size:20px;font-weight:500;color:#17171A;margin:0 0 16px;">
+      sartor<span style="color:#00B478;">.</span>
+    </p>
+    <p style="font-size:15px;color:#17171A;margin:0 0 8px;">
+      one click and you're in —
+      <span style="background:#D9F5E7;color:#0A6E4C;padding:1px 5px;border-radius:4px;">confirm your email</span>
+    </p>
+    <p style="font-size:13px;color:#8A8A88;margin:0 0 24px;">
+      You signed up for Sartor with this address. Confirm it to start swiping real roles.
+    </p>
+    <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/home"
+       style="display:inline-block;background:#00B478;color:#FFFFFF;font-size:14px;font-weight:500;padding:10px 24px;border-radius:20px;text-decoration:none;">
+      confirm email
+    </a>
+    <p style="font-size:12px;color:#B3B3AD;margin:24px 0 0;">
+      Didn't sign up? Ignore this email — nothing happens without the click.
+    </p>
+  </div>
+</div>
