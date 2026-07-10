@@ -2,7 +2,7 @@
 
 Check boxes as tasks complete (Obsidian renders these). One Claude Code session ≈ one sub-phase or less. Each phase ends with a **Definition of Done** — don't start the next phase until it's true.
 
-**Progress: Phase 0 — in progress (0.1 + 0.2 complete; 0.1's Obsidian vault step pending)**
+**Progress: Phase 0 — in progress (0.1 + 0.2 + 0.3 complete; 0.1's Obsidian vault step pending)**
 
 ## Timeline at a glance
 
@@ -38,10 +38,10 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 - [x] Deploy the skeleton to Vercel on day one (free `.vercel.app` URL, preview deploys per PR). Local dev stays Supabase CLI + Ollama; the deployed shell points at a hosted Supabase FREE-TIER project (created now, seed data only — this becomes the prod project in Phase 5). Catching deploy-only bugs starts NOW, not in Phase 5
 
 ### 0.3 Local backend
-- [ ] Docker Desktop installed (required for Supabase local stack)
-- [ ] Supabase CLI installed; `supabase init` + `supabase start` (Docker)
-- [ ] `.env.local` with local keys; confirm app connects
-- [ ] First migration: `profiles` table + RLS policy
+- [x] Docker Desktop installed (required for Supabase local stack)
+- [x] Supabase CLI installed; `supabase init` + `supabase start` (Docker)
+- [x] `.env.local` with local keys; confirm app connects
+- [x] First migration: `profiles` table + RLS policy
 
 ### 0.4 Local AI
 - [ ] Install Ollama; pull Qwen 2.5 (7B or 14B per RAM)

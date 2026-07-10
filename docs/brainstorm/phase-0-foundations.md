@@ -1,6 +1,6 @@
 # Brainstorm — Phase 0 — Foundations
 
-**Estimated duration:** 2–3 days · **Tracker:** [[ROADMAP]] · **Status:** in progress (0.1 + 0.2 done; 0.1's Obsidian vault step pending)
+**Estimated duration:** 2–3 days · **Tracker:** [[ROADMAP]] · **Status:** in progress (0.1 + 0.2 + 0.3 done; 0.1's Obsidian vault step pending)
 
 ## Ideas
 <!-- Anything that could make this phase better. No filtering — capture first, judge later. -->
@@ -22,6 +22,7 @@
 
 ## Solutions & lessons
 <!-- How each issue was fixed, and what to remember next time. Reference related notes in docs/learning/ by wikilink once they exist. -->
+- 2026-07-10 · Newer Supabase local images do NOT auto-grant table privileges to anon/authenticated on new tables (smoke test hit 42501 before RLS was ever evaluated). LESSON for every future migration: explicit GRANTs alongside the RLS policies, per table, in the same file — authenticated gets DML (RLS-filtered), service_role gets worker access, anon gets only what it genuinely needs (nothing, for user-owned tables). Grants gate the table; policies filter the rows.
 - 2026-07-09 · Audit findings 1–4 and 6 fixed in one session: check-category lists in CLAUDE.md pass-2 text + ROADMAP 0.1 now name all seven categories; ROADMAP progress line and the CI/Dependabot boxes reworded for honesty ("activates on first GitHub push"); `.vercel/` added to .gitignore; BETA-NOTES.md framing updated. Findings 5 and 7 remain documented INFO (accepted). Lesson: when a checker gains a category, update the spec text that enumerates its categories IN THE SAME COMMIT — the live-brainstorm-sync rule applies to the verification protocol itself.
 - 2026-07-09 · AUDIT #2 findings all resolved (fix session, commits 6c1479a..376e1c2): (1) undocumented dark tints → DESIGN.md dark table completed with --surface-tint + --violet-tint rows (approved), globals.css comment corrected — zero undocumented interpolations remain; (2) hairline cascade defect → side-specific hairline-t/b/l/r utilities, header/card use them INSTEAD of border utilities, verified in built CSS + source sweep (no hairline+border combos); (3) pill drift risk → 20px pill radius baked into Button base and small-size variants, call-site overrides removed; (4) toggle icon now CSS-driven via the dark: variant (correct from first paint) + aria-current="page" on the active tab. Preview-PR box left as-is per Adnane. Most-suspicious-area (token→shadcn mapping block) logged as a review GATE at Phase 1 start in [[brainstorm/phase-1-core-loop]]. Lessons: a custom utility sharing a CSS property with framework utilities must be side-specific and used exclusively — cascade order is not a contract; and every "only one exception" comment is itself an invariant a later audit will test.
 - 2026-07-09 · Audit "most suspicious area" (doc-sync fidelity unverifiable after `_docs-final/` deletion) CLOSED: a full external byte-level diff of all repo docs against the authoritative golden copy was performed by the spec's origin assistant — all files identical except the intentionally preserved session artifacts. `_docs-final/` does not need restoring.
