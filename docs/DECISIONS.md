@@ -4,6 +4,13 @@ One dated entry per significant choice. Format: **Decision — alternatives cons
 
 ---
 
+## 2026-07-10 — Table privileges: explicit GRANTs, anon denied at the privilege layer
+**Decision:** every migration that creates a table also writes its GRANTs explicitly, in the same file as its RLS policies: `authenticated` gets exactly the DML it needs (rows still filtered by RLS), `service_role` gets worker access, and `anon` gets NOTHING on user-owned tables — logged-out clients are rejected by Postgres privileges before RLS is ever evaluated. Grants gate the table; policies filter the rows.
+**Alternatives rejected:** Supabase's grant-broad/RLS-filter convention (grant to anon+authenticated, rely on policies alone) — one missing policy would expose rows to anonymous clients instead of failing closed; relying on environment default privileges — newer local images don't auto-grant at all (discovered when the 0.3 smoke test hit 42501), and hosted/local defaults differing is exactly the class of surprise explicit SQL eliminates.
+**Why:** defense in depth with fail-closed behavior, and migrations that carry their whole security story in one reviewable file. Governs every future table (jobs, swipes, applications, resumes, resume_versions, personality_profiles, job_sources).
+
+---
+
 ## 2026-07-09 — Monorepo with `worker/` subfolder
 **Decision:** one repository; Next.js at the root (Vercel), Python worker in `worker/` (Railway deploys the subfolder via its root-directory setting). Target layout documented in CLAUDE.md "Where things are".
 **Alternatives:** two repos (app + worker).
