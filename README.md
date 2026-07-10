@@ -10,7 +10,7 @@ Phase 2 (Railway). Start with [CLAUDE.md](CLAUDE.md), then `docs/PRD.md` and
 
 ```bash
 npm install
-npm run dev   # http://localhost:3000
+npm run dev   # http://localhost:3010
 ```
 
 Environment variables: copy `.env.example` to `.env.local` and follow the

@@ -12,7 +12,7 @@ export type AuthFormState = { error: string | null };
 
 async function siteOrigin(): Promise<string> {
   const h = await headers();
-  return h.get("origin") ?? `http://${h.get("host") ?? "localhost:3000"}`;
+  return h.get("origin") ?? `http://${h.get("host") ?? "localhost:3010"}`;
 }
 
 export async function signUpAction(
