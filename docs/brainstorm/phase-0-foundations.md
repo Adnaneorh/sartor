@@ -1,6 +1,6 @@
 # Brainstorm — Phase 0 — Foundations
 
-**Estimated duration:** 2–3 days · **Tracker:** [[ROADMAP]] · **Status:** in progress (0.1 + 0.2 + 0.3 done; 0.1's Obsidian vault step pending)
+**Estimated duration:** 2–3 days · **Tracker:** [[ROADMAP]] · **Status:** DoD met 2026-07-10 — repo ✓, app + toggle ✓, RLS'd table on local Supabase ✓, Ollama JSON-mode through provider interface ✓. Open: 0.1 Obsidian vault step (not a DoD clause).
 
 ## Ideas
 <!-- Anything that could make this phase better. No filtering — capture first, judge later. -->

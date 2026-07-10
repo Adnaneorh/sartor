@@ -2,7 +2,7 @@
 
 Check boxes as tasks complete (Obsidian renders these). One Claude Code session ≈ one sub-phase or less. Each phase ends with a **Definition of Done** — don't start the next phase until it's true.
 
-**Progress: Phase 0 — in progress (0.1 + 0.2 + 0.3 complete; 0.1's Obsidian vault step pending)**
+**Progress: Phase 0 — DoD met 2026-07-10 (all four clauses verified); one task open: 0.1's Obsidian vault step. Phase 1 next.**
 
 ## Timeline at a glance
 
@@ -44,9 +44,9 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 - [x] First migration: `profiles` table + RLS policy
 
 ### 0.4 Local AI
-- [ ] Install Ollama; pull Qwen 2.5 (7B or 14B per RAM)
-- [ ] Create `lib/llm/` provider interface: `stub | ollama | hosted` via `LLM_PROVIDER`
-- [ ] Smoke test: JSON-mode call to Ollama returns valid structured output
+- [x] Install Ollama; pull Qwen 2.5 (7B or 14B per RAM)
+- [x] Create `lib/llm/` provider interface: `stub | ollama | hosted` via `LLM_PROVIDER`
+- [x] Smoke test: JSON-mode call to Ollama returns valid structured output
 
 **DoD:** repo committed, app runs locally with theme toggle, Supabase local up with one RLS'd table, Ollama answers a JSON-mode call through the provider interface.
 
