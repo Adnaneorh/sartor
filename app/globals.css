@@ -1,26 +1,229 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Sartor design tokens — single source of color truth (docs/DESIGN.md).
+ * Hex values live ONLY in this file; components use CSS variables /
+ * Tailwind utilities derived from them (CLAUDE.md + DESIGN.md rule).
+ * :root = light (DEFAULT theme) · .dark = "pulse" (via next-themes toggle).
+ */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-sans);
+
+  /* Sartor tokens (DESIGN.md "Color tokens") */
+  --color-surface: var(--surface);
+  --color-surface-tint: var(--surface-tint);
+  --color-border-strong: var(--border-strong);
+  --color-ink: var(--ink);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-on-accent: var(--on-accent);
+  --color-mint-tint: var(--mint-tint);
+  --color-mint-text: var(--mint-text);
+  --color-violet: var(--violet);
+  --color-violet-tint: var(--violet-tint);
+  --color-amber-tint: var(--amber-tint);
+  --color-amber-text: var(--amber-text);
+  --color-red-tint: var(--red-tint);
+  --color-red-text: var(--red-text);
+
+  /* shadcn semantic aliases */
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+
+  /* Shape language (DESIGN.md): pills 20px · cards 14–18px */
+  --radius-pill: 1.25rem;
+  --radius-card: 1rem;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ---------- Light (DEFAULT) — DESIGN.md table ---------- */
+:root {
+  --background: #fdfdfb;
+  --surface: #ffffff;
+  --surface-tint: #f3f3ee;
+  --border: #e7e7e2;
+  --border-strong: #dadad4;
+  --ink: #17171a;
+  --text-secondary: #8a8a88;
+  --text-muted: #b3b3ad;
+  --on-accent: #ffffff;
+  --mint-tint: #d9f5e7;
+  --mint-text: #0a6e4c;
+  --violet: #5b48d6;
+  --violet-tint: #eeebfc;
+  --amber-tint: #fbf0d9;
+  --amber-text: #8a5a0b;
+  --red-tint: #fbe3e3;
+  --red-text: #9b2c2c;
+
+  /* shadcn semantics mapped onto the Sartor palette */
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: #00b478; /* --accent (primary action) */
+  --primary-foreground: var(--on-accent);
+  --secondary: var(--surface-tint);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-tint);
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--surface-tint);
+  --accent-foreground: var(--ink);
+  --destructive: var(--red-text);
+  --input: var(--border);
+  --ring: var(--primary);
+  --radius: 1rem; /* cards 14–18px → 16px base */
+
+  /* derived (not in DESIGN.md): sidebar/charts wired to the palette */
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--on-accent);
+  --sidebar-accent: var(--surface-tint);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--primary);
+  --chart-1: var(--primary);
+  --chart-2: var(--violet);
+  --chart-3: var(--amber-text);
+  --chart-4: var(--red-text);
+  --chart-5: var(--text-secondary);
+}
+
+/* ---------- Dark "pulse" (via toggle) — DESIGN.md table ---------- */
+.dark {
+  --background: #0b0b0d;
+  --surface: #16161a;
+  --surface-tint: rgba(255, 255, 255, 0.04);
+  --border: #232328;
+  --border-strong: #2e2e34;
+  --ink: #f2f2f4;
+  --text-secondary: #8a8a93;
+  --text-muted: #5c5c64;
+  --on-accent: #04342c;
+  /* DESIGN.md specifies "color on rgba tint" for dark markers; tint alphas
+     are the one interpolation this file makes (0.08 mint per spec, 0.12 rest) */
+  --mint-tint: rgba(0, 212, 138, 0.08);
+  --mint-text: #00d48a;
+  --violet: #8b7cff;
+  --violet-tint: rgba(139, 124, 255, 0.12);
+  --amber-tint: rgba(239, 159, 39, 0.12);
+  --amber-text: #ef9f27;
+  --red-tint: rgba(244, 82, 106, 0.12);
+  --red-text: #f4526a;
+
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: #00d48a; /* --accent (pulse) */
+  --primary-foreground: var(--on-accent);
+  --secondary: var(--surface-tint);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-tint);
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--surface-tint);
+  --accent-foreground: var(--ink);
+  --destructive: var(--red-text);
+  --input: var(--border);
+  --ring: var(--primary);
+
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--on-accent);
+  --sidebar-accent: var(--surface-tint);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--primary);
+  --chart-1: var(--primary);
+  --chart-2: var(--violet);
+  --chart-3: var(--amber-text);
+  --chart-4: var(--red-text);
+  --chart-5: var(--text-secondary);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-size: 13px; /* DESIGN.md: in-app base 12–13px */
+  }
+  html {
+    @apply font-sans;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Signature elements (DESIGN.md): highlighter markers + hairline borders */
+@layer components {
+  .marker-mint,
+  .marker-amber,
+  .marker-red {
+    padding: 0.05em 0.25em;
+    border-radius: 0.25em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .marker-mint {
+    background: var(--mint-tint);
+    color: var(--mint-text);
+  }
+  .marker-amber {
+    background: var(--amber-tint);
+    color: var(--amber-text);
+  }
+  .marker-red {
+    background: var(--red-tint);
+    color: var(--red-text);
+  }
+}
+
+@utility hairline {
+  border-width: 0.5px; /* DESIGN.md: elevation via hairlines, never shadows */
 }
