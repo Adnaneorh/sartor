@@ -4,7 +4,7 @@
 
 ## Ideas
 <!-- Anything that could make this phase better. No filtering — capture first, judge later. -->
--
+- 2026-07-09 · Phase 5 hardening TODO: Vercel Deployment Protection is fully OFF (Hobby plan lacks "Only Preview Deployments", so preview URLs are public too — accepted for now, per Adnane). Revisit at ship: protect previews (plan upgrade or password protection) before real user data flows.
 
 ## Issues encountered
 <!-- What broke, when, and the error/symptom. Date each entry. -->

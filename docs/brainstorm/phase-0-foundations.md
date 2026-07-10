@@ -1,6 +1,6 @@
 # Brainstorm — Phase 0 — Foundations
 
-**Estimated duration:** 2–3 days · **Tracker:** [[ROADMAP]] · **Status:** in progress (0.1 done except Obsidian vault step)
+**Estimated duration:** 2–3 days · **Tracker:** [[ROADMAP]] · **Status:** in progress (0.1 + 0.2 done; 0.1's Obsidian vault step pending)
 
 ## Ideas
 <!-- Anything that could make this phase better. No filtering — capture first, judge later. -->

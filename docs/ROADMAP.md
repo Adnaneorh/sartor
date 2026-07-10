@@ -2,7 +2,7 @@
 
 Check boxes as tasks complete (Obsidian renders these). One Claude Code session ≈ one sub-phase or less. Each phase ends with a **Definition of Done** — don't start the next phase until it's true.
 
-**Progress: Phase 0 — in progress (0.1 complete except the Obsidian vault step)**
+**Progress: Phase 0 — in progress (0.1 + 0.2 complete; 0.1's Obsidian vault step pending)**
 
 ## Timeline at a glance
 
@@ -31,11 +31,11 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 - [ ] Open `docs/` as Obsidian vault (or add to existing vault)
 
 ### 0.2 App scaffold
-- [ ] `create-next-app` (TypeScript, App Router, Tailwind)
-- [ ] Install shadcn/ui; init theme with CSS variables from DESIGN.md (light default + dark "pulse")
-- [ ] `next-themes` toggle working; LIGHT default; no flash on load
-- [ ] Inter + JetBrains Mono via `next/font`
-- [ ] Deploy the skeleton to Vercel on day one (free `.vercel.app` URL, preview deploys per PR). Local dev stays Supabase CLI + Ollama; the deployed shell points at a hosted Supabase FREE-TIER project (created now, seed data only — this becomes the prod project in Phase 5). Catching deploy-only bugs starts NOW, not in Phase 5
+- [x] `create-next-app` (TypeScript, App Router, Tailwind)
+- [x] Install shadcn/ui; init theme with CSS variables from DESIGN.md (light default + dark "pulse")
+- [x] `next-themes` toggle working; LIGHT default; no flash on load
+- [x] Inter + JetBrains Mono via `next/font`
+- [x] Deploy the skeleton to Vercel on day one (free `.vercel.app` URL, preview deploys per PR). Local dev stays Supabase CLI + Ollama; the deployed shell points at a hosted Supabase FREE-TIER project (created now, seed data only — this becomes the prod project in Phase 5). Catching deploy-only bugs starts NOW, not in Phase 5
 
 ### 0.3 Local backend
 - [ ] Docker Desktop installed (required for Supabase local stack)
