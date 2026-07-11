@@ -20,6 +20,7 @@
 
 ## Change log (approved modifications)
 <!-- One dated line per approved change affecting this phase; full spec lives where the pointer says. Claude Code appends here IN THE SAME SESSION as any approved change (CLAUDE.md workflow rule). -->
+- 2026-07-10 · Hosted auth config: confirm-email ON + URL config done by Adnane; branded template BLOCKED on hosted (requires custom SMTP → deferred to Phase 5, default template acceptable); /auth/confirm gained a ?code= exchange fallback so default-template confirmations complete with a session → ROADMAP 1.1 + Phase 5, app/auth/confirm/route.ts
 - 2026-07-10 · GATE 2 PASSED — behavioral two-account RLS test green (8 checks + paranoia, both directions: own-row reads 1, cross SELECT 0 rows, cross UPDATE 0 affected, cross INSERT 42501). Phase 1's blocking gate satisfied for profiles; re-run against every new user-owned table → scripts/rls-two-account-test.mjs
 - 2026-07-10 · Client-side Sentry approved: NEXT_PUBLIC_SENTRY_DSN joins the anon key as a client-exposed var (DSNs are publishable); CLAUDE.md secrets rule amended → CLAUDE.md, .env.example, instrumentation-client.ts
 - 2026-07-10 · Google OAuth deferred to a follow-up INSIDE 1.1 (email/password proven first, per Adnane); OAuth callback route already in place → ROADMAP 1.1

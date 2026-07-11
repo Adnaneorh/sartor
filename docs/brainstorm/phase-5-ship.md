@@ -20,6 +20,7 @@
 
 ## Change log (approved modifications)
 <!-- One dated line per approved change affecting this phase; full spec lives where the pointer says. Claude Code appends here IN THE SAME SESSION as any approved change (CLAUDE.md workflow rule). -->
+- 2026-07-10 · Branded confirmation-email template DEFERRED to the Phase 5 SMTP task: hosted dashboard locks template editing behind custom SMTP ("Set up custom SMTP to edit templates"); local template committed + proven via Mailpit; hosted uses the default template meanwhile → ROADMAP Phase 5 SMTP box, supabase/templates/confirmation.html
 - 2026-07-09 · Production SMTP for auth emails (Resend/Postmark) added to Phase 5; SMTP key added to inventory → ROADMAP Phase 5, CLAUDE.md secrets
 - 2026-07-09 · Audit fix: Phase 5 Supabase task reworded to migrate/verify/upgrade the Phase-0 project; Phase 5 key list now verification-only → ROADMAP Phase 5, CLAUDE.md secrets
 - 2026-07-09 · Phase 5 deploy/Sentry tasks reduced to promotion + verification (both live since Phases 0–2) → ROADMAP Phase 5

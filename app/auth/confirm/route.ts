@@ -18,6 +18,18 @@ export async function GET(request: NextRequest) {
     }
   }
 
+  // Fallback: the hosted DEFAULT template (in force until Phase 5 SMTP
+  // unlocks template editing) verifies on Supabase's side and redirects
+  // here with ?code= instead of a token_hash — exchange it for a session.
+  const code = searchParams.get("code");
+  if (code) {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error) {
+      return NextResponse.redirect(new URL(next, request.url));
+    }
+  }
+
   return NextResponse.redirect(
     new URL("/signin?error=confirmation_failed", request.url)
   );

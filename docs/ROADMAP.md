@@ -57,7 +57,7 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 ### 1.1 Auth
 - [ ] Supabase Auth: email/password + Google OAuth (email/password DONE + proven; Google OAuth deferred to a 1.1 follow-up per Adnane 2026-07-10)
 - [x] Auth pages (sign in/up/out) + protected routes middleware
-- [x] Email verification: enable "confirm email" in Supabase Auth; customize the email template (Sartor branding, correct redirect URL); unverified users blocked by middleware and shown a "check your inbox" screen with a resend button
+- [x] Email verification: enable "confirm email" in Supabase Auth; customize the email template (Sartor branding, correct redirect URL); unverified users blocked by middleware and shown a "check your inbox" screen with a resend button (branding proven LOCALLY; hosted keeps the default template until Phase 5 — the platform requires custom SMTP to edit templates; /auth/confirm handles both link styles)
 - [x] Manual test of the verification flow: sign up → receive email → confirm → access granted; unconfirmed account stays blocked. NOTE: Supabase's built-in sender is rate-limited (dev only) — production SMTP is a Phase 5 task
 - [x] `profiles` row auto-created on signup (trigger)
 - [x] Manual RLS test with two accounts: A cannot read B's profile (GATE 2 passed 2026-07-10: 8 behavioral checks green, both directions)
@@ -194,7 +194,7 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 - [ ] Promote the Vercel deployment (live since Phase 0) to production config; deploy worker to Railway; cron verified in prod
 - [ ] `LLM_PROVIDER=hosted` in prod; key set
 - [ ] Verify Sentry (live on app since Phase 1, worker since Phase 2) has prod DSNs and alerting configured
-- [ ] Production email sending: configure custom SMTP in Supabase Auth (e.g. Resend or Postmark free tier) — the built-in sender's rate limits are not launch-safe; re-test the verification flow on the prod domain
+- [ ] Production email sending: configure custom SMTP in Supabase Auth (e.g. Resend or Postmark free tier) — the built-in sender's rate limits are not launch-safe; re-test the verification flow on the prod domain. THEN paste the branded confirmation template (supabase/templates/confirmation.html) into the hosted dashboard — template editing is locked behind custom SMTP (discovered 2026-07-10)
 - [ ] Verify Supabase backups/PITR enabled on the hosted project; repo pushed to GitHub
 - [ ] Privacy policy (PIPEDA-conscious) + "delete my account and all data" button (actually deletes files + rows)
 - [ ] Full manual test pass on free `.vercel.app` URL
