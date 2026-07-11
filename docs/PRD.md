@@ -95,7 +95,7 @@ Modular monolith + one worker:
 - **Embeddings (v2):** nomic-embed-text via Ollama + Supabase pgvector for semantic job↔resume ranking.
 
 ## 5. Data model (core tables)
-- `profiles` — user persona (full name, optional phone, age-confirmed flag, desired roles, province, cities[], remote pref, salary range CAD, seniority). Email lives in `auth.users` only — never duplicated into profiles.
+- `profiles` — user persona (full name, optional phone, age-confirmed flag, desired roles, province, cities[], remote pref, salary range CAD, seniority, onboarded_at — NULL until onboarding completes; an explicit fact, never inferred from empty fields). Email lives in `auth.users` only — never duplicated into profiles.
 - `personality_profiles` — user_id, scores R/I/A/S/E/C, instrument version, completed_at (absent = skipped)
 - `jobs` — normalized postings (source, external_id, company, title, province, city, salary CAD, description, apply_url, apply_mode easy|hard, occupation_category NOC-family|uncategorized, posted_at, last_seen_at, is_active, is_fresh, dedup_hash)
 - `job_sources` — source registry (type, company slug / API config, last_polled, discovered_by manual|scout, status active|watch)

@@ -2,7 +2,7 @@
 
 Check boxes as tasks complete (Obsidian renders these). One Claude Code session ≈ one sub-phase or less. Each phase ends with a **Definition of Done** — don't start the next phase until it's true.
 
-**Progress: Phase 0 — DoD met 2026-07-10 (all four clauses verified); one task open: 0.1's Obsidian vault step. Phase 1 next.**
+**Progress: Phase 1 — 1.2 done 2026-07-11 (dataset + onboarding + settings; persona probe green, updated_at audit item closed). Open: 1.1's Google OAuth follow-up (security-gated), 0.1's Obsidian vault step. Next: 1.3 seed jobs.**
 
 ## Timeline at a glance
 
@@ -67,9 +67,9 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 - [x] Registration form: full name, email, OPTIONAL phone, 16+ age confirmation — PIPEDA-minimized, NO full DOB — Zod-validated
 
 ### 1.2 Onboarding / persona
-- [ ] Static provinces→cities JSON dataset (10 provinces + 3 territories, GeoNames-derived) — BEFORE the onboarding UI that consumes it
-- [ ] Multi-step onboarding: desired roles, province + cities (static CA dataset), remote pref, salary range (CAD), seniority
-- [ ] Persona editable later in Settings
+- [x] Static provinces→cities JSON dataset (10 provinces + 3 territories, GeoNames-derived) — BEFORE the onboarding UI that consumes it (done 2026-07-11: `scripts/generate-ca-cities.mjs` → `lib/data/ca-provinces-cities.json`, GeoNames cities5000 CC BY 4.0, pop ≥5k, ≤60/province, 471 cities; typed accessors in `lib/data/canada.ts` feed UI + server validation)
+- [x] Multi-step onboarding: desired roles, province + cities (static CA dataset), remote pref, salary range (CAD), seniority (done 2026-07-11: 4 steps on the offset mint panel, Enter-to-advance, salary skippable; `savePersonaAction` Zod-parses → updates own row under RLS → stamps `onboarded_at` once; `/home` gated on `onboarded_at`, `/onboarding` + `/settings` middleware-protected; `scripts/persona-probe.mts` green — proves updated_at advances on real UPDATE [audit #3 item closed], city∉province and salary min>max rejected, checker itself proven by seeded defect)
+- [x] Persona editable later in Settings (done 2026-07-11: `/settings` pre-filled single-page form reusing `components/persona/` fields + the SAME action; DESIGN top nav extracted to `components/top-nav.tsx`, used by home + settings, no streak pill)
 
 ### 1.3 Seed jobs
 - [ ] `jobs` table migration (schema per PRD §5) + RLS: read-only for authenticated users; writes only via service-role (worker)
