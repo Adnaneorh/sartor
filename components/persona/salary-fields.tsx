@@ -2,10 +2,13 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SALARY_MAX_CAD } from "@/lib/validation/persona";
 
 // Salary range in CAD — mono per DESIGN ("mono for data"). Values are raw
-// digit strings; the server action converts and Zod validates the range
-// (skippable: both may stay empty — DECISION 4).
+// digit strings clamped to the schema's own ceiling, so the input can't
+// carry a value the boundary would reject; the server action converts and
+// Zod validates the range (skippable: both may stay empty —
+// DECISIONS 2026-07-11 §5).
 export function SalaryFields({
   min,
   max,
@@ -17,7 +20,10 @@ export function SalaryFields({
   onMinChange: (value: string) => void;
   onMaxChange: (value: string) => void;
 }) {
-  const digitsOnly = (value: string) => value.replace(/\D/g, "").slice(0, 7);
+  const digitsOnly = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 7);
+    return digits === "" ? "" : String(Math.min(Number(digits), SALARY_MAX_CAD));
+  };
 
   return (
     <div className="flex items-end gap-3">

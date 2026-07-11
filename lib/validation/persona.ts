@@ -14,11 +14,15 @@ export const SENIORITY_LEVELS = ["intern", "junior", "mid", "senior", "lead"] as
 export type RemotePreference = (typeof REMOTE_PREFERENCES)[number];
 export type Seniority = (typeof SENIORITY_LEVELS)[number];
 
+// Shared with the salary UI so the input clamps to the same ceiling the
+// boundary enforces (AUDIT #5 finding 6) — one constant, two layers.
+export const SALARY_MAX_CAD = 1_000_000;
+
 const salaryCad = z
   .number("salary must be a number")
   .int("salary must be a whole number")
   .min(0, "salary can't be negative")
-  .max(1_000_000, "salary must be 1,000,000 or less")
+  .max(SALARY_MAX_CAD, "salary must be 1,000,000 or less")
   .optional();
 
 export const personaSchema = z
@@ -32,7 +36,17 @@ export const personaSchema = z
           .max(80, "each role must be 80 characters or less")
       )
       .min(1, "add at least one role")
-      .max(10, "up to 10 roles"),
+      .max(10, "up to 10 roles")
+      // the UI dedupes case-insensitively; don't trust the client (rule 11)
+      .transform((roles) => {
+        const seen = new Set<string>();
+        return roles.filter((role) => {
+          const key = role.toLowerCase();
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+      }),
     province: z.enum(PROVINCE_CODES, {
       error: "pick a province or territory",
     }),
