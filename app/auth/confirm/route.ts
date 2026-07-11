@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { safeRedirectPath } from "@/lib/auth/redirect";
 
 // Email-confirmation landing: the branded email links here with a
 // token_hash; verifyOtp exchanges it for a session (PKCE/SSR pattern).
@@ -8,7 +9,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
-  const next = searchParams.get("next") ?? "/home";
+  const next = safeRedirectPath(searchParams.get("next"));
 
   if (token_hash && type) {
     const supabase = await createClient();

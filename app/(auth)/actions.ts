@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { safeRedirectPath } from "@/lib/auth/redirect";
 import { signUpSchema, signInSchema, resendSchema } from "@/lib/validation/auth";
 
 // Server actions = the trust boundary: every input Zod-parsed before any
@@ -71,7 +72,10 @@ export async function signInAction(
     return { error: "email or password is incorrect" };
   }
 
-  redirect("/home");
+  // Honor the destination the middleware stashed in ?next= (hidden form
+  // field, so client-controlled — validated like any other input).
+  const next = formData.get("next");
+  redirect(safeRedirectPath(typeof next === "string" ? next : null));
 }
 
 export async function resendConfirmationAction(

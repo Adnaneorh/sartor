@@ -6,7 +6,15 @@ import { signInAction } from "../actions";
 
 export const metadata = { title: "sign in — sartor." };
 
-export default function SignInPage() {
+export default async function SignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
+  // Set by the middleware when it bounced a protected route; carried
+  // through the form and validated in signInAction (safeRedirectPath).
+  const { next } = await searchParams;
+
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-medium tracking-tight text-ink">
@@ -14,6 +22,7 @@ export default function SignInPage() {
       </h1>
 
       <AuthForm action={signInAction} submitLabel="sign in">
+        {next && <input type="hidden" name="next" value={next} />}
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="email">email</Label>
           <Input id="email" name="email" type="email" autoComplete="email" required />
