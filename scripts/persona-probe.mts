@@ -6,9 +6,12 @@
 //      on the user's own profiles row under RLS
 //   2. updated_at ADVANCES on a real UPDATE (closes the parked audit #3
 //      item: the trigger was only structurally verified until now)
-//   3. personaSchema rejects a city outside the selected province
-//   4. personaSchema rejects salary min > max
-//   5. the DB salary_range_valid check ALSO rejects min > max (the schema
+//   3. onboarded_at stamps ONCE — the action's .is('onboarded_at', null)
+//      guard is proven at the DB: a second stamp matches 0 rows and the
+//      first timestamp survives (AUDIT #5 finding 1)
+//   4. personaSchema rejects a city outside the selected province
+//   5. personaSchema rejects salary min > max
+//   6. the DB salary_range_valid check ALSO rejects min > max (the schema
 //      is the boundary, the constraint is the backstop — prove both)
 //
 // usage: npx tsx scripts/persona-probe.mts   (requires `supabase start`)
@@ -98,7 +101,39 @@ try {
     `${before.data?.updated_at} → ${upd.data?.updated_at}`
   );
 
-  // 3 — Calgary is real, but it is not in Ontario
+  // 3 — stamp-once: the exact stamp shape savePersonaAction issues, twice
+  // with distinct sentinel timestamps — the .is() guard must let only the
+  // first one write, whatever races (AUDIT #5 finding 1)
+  const t1 = "2026-01-01T00:00:00.000Z";
+  const t2 = "2026-02-02T00:00:00.000Z";
+  const stamp1 = await me
+    .from("profiles")
+    .update({ onboarded_at: t1 })
+    .eq("user_id", userId)
+    .is("onboarded_at", null)
+    .select("onboarded_at");
+  check(
+    "first onboarded_at stamp lands (row starts null)",
+    !stamp1.error && stamp1.data?.length === 1
+  );
+  const stamp2 = await me
+    .from("profiles")
+    .update({ onboarded_at: t2 })
+    .eq("user_id", userId)
+    .is("onboarded_at", null)
+    .select("onboarded_at");
+  check(
+    "re-stamp matches 0 rows — success, not an overwrite",
+    !stamp2.error && stamp2.data?.length === 0
+  );
+  const stamped = await me.from("profiles").select("onboarded_at").eq("user_id", userId).single();
+  check(
+    "onboarded_at still the FIRST stamp",
+    !stamped.error && new Date(stamped.data?.onboarded_at).getTime() === new Date(t1).getTime(),
+    `${stamped.data?.onboarded_at}`
+  );
+
+  // 4 — Calgary is real, but it is not in Ontario
   const wrongCity = personaSchema.safeParse({
     desired_roles: ["frontend developer"],
     province: "ON",
@@ -112,7 +147,7 @@ try {
     wrongCity.success ? "accepted!" : wrongCity.error.issues[0]?.message
   );
 
-  // 4 — min > max fails the schema refine
+  // 5 — min > max fails the schema refine
   const invertedRange = personaSchema.safeParse({
     desired_roles: ["frontend developer"],
     province: "ON",
@@ -128,7 +163,7 @@ try {
     invertedRange.success ? "accepted!" : invertedRange.error.issues[0]?.message
   );
 
-  // 5 — and the DB check constraint is a live backstop behind the schema
+  // 6 — and the DB check constraint is a live backstop behind the schema
   const dbReject = await me
     .from("profiles")
     .update({ salary_min_cad: 90000, salary_max_cad: 60000 })
