@@ -1,8 +1,6 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { signOutAction } from "@/app/(auth)/actions";
+import { TopNav } from "@/components/top-nav";
 
 export const metadata = { title: "home — sartor." };
 
@@ -18,30 +16,17 @@ export default async function HomePage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, age_confirmed")
+    .select("full_name, age_confirmed, onboarded_at")
     .eq("user_id", user.id)
     .single();
 
+  // Persona first: /home is gated on completed onboarding (ROADMAP 1.2).
+  // onboarded_at is an explicit fact — never inferred from empty fields.
+  if (!profile?.onboarded_at) redirect("/onboarding");
+
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="hairline-b bg-surface">
-        <nav className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-6">
-          <Link href="/" className="text-lg font-medium tracking-tight text-ink">
-            sartor<span className="text-primary">.</span>
-          </Link>
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <form action={signOutAction}>
-              <button
-                type="submit"
-                className="h-8 rounded-pill bg-secondary px-4 text-sm text-secondary-foreground hover:bg-surface-tint"
-              >
-                sign out
-              </button>
-            </form>
-          </div>
-        </nav>
-      </header>
+      <TopNav active="home" />
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 px-6 py-12">
         <h1 className="text-2xl font-medium tracking-tight text-ink">
           you&apos;re <span className="marker-mint">in</span>
