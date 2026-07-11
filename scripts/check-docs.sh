@@ -2,13 +2,14 @@
 # check-docs.sh — automated docs consistency check.
 #
 # Pass 2 of the CLAUDE.md verification protocol; runs locally and in CI on
-# every push (.github/workflows/check-docs.yml). Six invariant categories:
+# every push (.github/workflows/check-docs.yml). Seven invariant categories:
 #   1. pointers            files/dirs named by CLAUDE.md actually exist
 #   2. wikilinks           every [[target]] in docs/ resolves to a file
 #   3. schema names        table lists agree across CLAUDE.md / PRD / ROADMAP
-#   4. enums               status, apply_mode, LLM_PROVIDER agree everywhere
-#   5. counts              AI call points, RIASEC items/letters, table count
+#   4. enums               status, apply_mode, LLM_PROVIDER, persona lists
+#   5. counts              AI call points, RIASEC items, CA dataset cities/codes
 #   6. estimate arithmetic ROADMAP per-phase estimates sum to the stated total
+#   7. naming              product name present, working names retired
 #
 # Any FAIL exits 1. Bash 3.2 compatible (macOS default); BSD & GNU tools only.
 # Test-the-tester rule (CLAUDE.md): whenever this script changes, seed a
@@ -136,6 +137,28 @@ for f in CLAUDE.md docs/PRD.md docs/AI-LAYER.md docs/ROADMAP.md .env.example; do
   fi
 done
 
+# Persona enums (AUDIT #5 finding 5): the canonical arrays in
+# lib/validation/persona.ts, pipe-joined, must appear verbatim in
+# DECISIONS.md and the phase-1 change log — docs drift fails here.
+REMOTE_CODE=$(grep 'REMOTE_PREFERENCES = \[' lib/validation/persona.ts \
+  | grep -oE '"[a-z]+"' | tr -d '"' | paste -s -d '|' -)
+SENIOR_CODE=$(grep 'SENIORITY_LEVELS = \[' lib/validation/persona.ts \
+  | grep -oE '"[a-z]+"' | tr -d '"' | paste -s -d '|' -)
+for pair in "remote_preference=$REMOTE_CODE" "seniority=$SENIOR_CODE"; do
+  nm=${pair%%=*}; val=${pair#*=}
+  if [ -z "$val" ]; then
+    fail "enum: persona $nm list not parsed from lib/validation/persona.ts"
+    continue
+  fi
+  for f in docs/DECISIONS.md docs/brainstorm/phase-1-core-loop.md; do
+    if grep -qF "\`$val\`" "$f"; then
+      pass "enum: persona $nm ($val) matches $f"
+    else
+      fail "enum: persona $nm is '$val' in persona.ts but not in $f"
+    fi
+  done
+done
+
 echo "== 5. Counts =="
 # AI-LAYER §2 numbered call points: contiguous 1..N, and every cross-doc
 # "call point #k" reference stays in range.
@@ -172,6 +195,41 @@ for f in docs/PRD.md docs/ROADMAP.md; do
     fail "count: R/I/A/S/E/C letters missing from $f"
   fi
 done
+
+# CA dataset (AUDIT #5 finding 5): the committed JSON is the source of
+# truth. Its city TOTAL must equal every "N cities" claim in the living
+# docs (the "60 cities/province" cap phrasing is excluded), and its codes
+# must equal canada.ts PROVINCE_CODES — the `as ProvinceCode` cast rests
+# on that agreement. Regenerating the dataset without syncing docs fails.
+CITY_ACTUAL=$(node -e 'const d=require("./lib/data/ca-provinces-cities.json");console.log(d.provinces.reduce((n,p)=>n+p.cities.length,0))' 2>/dev/null)
+if [ -z "$CITY_ACTUAL" ]; then
+  fail "count: could not read lib/data/ca-provinces-cities.json"
+else
+  CITY_BAD=0
+  for f in docs/DECISIONS.md docs/ROADMAP.md; do
+    CLAIMS=$(grep -oE '[0-9]+ cities([^/]|$)' "$f" | grep -oE '^[0-9]+' | sort -u)
+    if [ -z "$CLAIMS" ]; then
+      fail "count: no dataset-total 'N cities' claim found in $f"
+      CITY_BAD=1
+      continue
+    fi
+    for c in $CLAIMS; do
+      if [ "$c" != "$CITY_ACTUAL" ]; then
+        fail "count: $f claims $c cities but the dataset has $CITY_ACTUAL"
+        CITY_BAD=1
+      fi
+    done
+  done
+  [ "$CITY_BAD" -eq 0 ] && pass "count: dataset city total ($CITY_ACTUAL) matches DECISIONS + ROADMAP claims"
+fi
+JSON_CODES=$(node -e 'const d=require("./lib/data/ca-provinces-cities.json");console.log(d.provinces.map(p=>p.code).sort().join(" "))' 2>/dev/null)
+TS_CODES=$(sed -n '/PROVINCE_CODES = \[/,/^\] as const/p' lib/data/canada.ts \
+  | grep -oE '"[A-Z]{2}"' | tr -d '"' | sort | tr '\n' ' ' | sed 's/ $//')
+if [ -n "$JSON_CODES" ] && [ "$JSON_CODES" = "$TS_CODES" ]; then
+  pass "count: dataset codes == canada.ts PROVINCE_CODES ($(echo "$JSON_CODES" | wc -w | tr -d ' ') codes)"
+else
+  fail "count: dataset codes [$JSON_CODES] != canada.ts PROVINCE_CODES [$TS_CODES]"
+fi
 
 echo "== 6. Estimate arithmetic =="
 # Per-phase estimates in the ROADMAP timeline table must sum to the stated
