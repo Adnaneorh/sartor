@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 // Paths that require a signed-in AND email-verified user. Everything the
 // real app adds later (deck, tracker, studio, copilot) belongs here.
-const PROTECTED_PREFIXES = ["/home"];
+const PROTECTED_PREFIXES = ["/home", "/onboarding", "/settings"];
 
 // Session refresh + route protection, run by middleware.ts on every
 // matched request. Do not run logic between createServerClient and
