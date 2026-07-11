@@ -63,7 +63,7 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 - [x] Manual RLS test with two accounts: A cannot read B's profile (GATE 2 passed 2026-07-10: 8 behavioral checks green, both directions)
 - [x] Zod schemas for all API route inputs and forms (pattern established here, reused everywhere)
 - [x] CI from day one: GitHub Actions runs typecheck + lint on every push (fixture tests join in Phase 3)
-- [ ] Sentry (app) from Phase 1 — free tier, DSN in env vars; worker Sentry joins in Phase 2 when the worker exists (code wired server+edge+client, no-ops without DSN; box closes when Adnane's DSN lands)
+- [x] Sentry (app) from Phase 1 — free tier, DSN in env vars; worker Sentry joins in Phase 2 when the worker exists (server+edge+client wired; DSN in .env.local + Vercel all environments; delivery verified 2026-07-10: deliberate error captured, flush confirmed)
 - [x] Registration form: full name, email, OPTIONAL phone, 16+ age confirmation — PIPEDA-minimized, NO full DOB — Zod-validated
 
 ### 1.2 Onboarding / persona
