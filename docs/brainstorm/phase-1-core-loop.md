@@ -8,7 +8,7 @@
 
 ## Issues encountered
 <!-- What broke, when, and the error/symptom. Date each entry. -->
--
+- 2026-07-10 · Next 16 dev server (Turbopack) crashed after ~7h uptime: "FATAL ERROR: Ineffective mark-compacts near heap limit — JavaScript heap out of memory" (SWC native module in the trace) following a day of hot reloads incl. the proxy rename. Restarted clean (Ready 214ms, /signup 200). WATCH: if it recurs on shorter uptimes, add NODE_OPTIONS=--max-old-space-size=8192 to the dev script and/or check for a Turbopack HMR leak on Next 16.2.
 
 ## Solutions & lessons
 <!-- How each issue was fixed, and what to remember next time. Reference related notes in docs/learning/ by wikilink once they exist. -->
