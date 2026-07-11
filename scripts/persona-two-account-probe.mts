@@ -8,8 +8,13 @@
 //      issues (.eq on B's user_id + .select().single()), including an
 //      onboarded_at overwrite attempt — matches 0 rows and errors
 //   3. A's un-owned BULK update (.neq A) matches 0 rows
-//   4. B's row is byte-identical after A's attempts (service-role read)
-//   5. positive control — the same shape DOES land on A's own row
+//   4. A cannot recovery-INSERT a row for another user — the missing-row
+//      recovery shape is rejected by profiles_insert_own (42501), proven
+//      against a ROWLESS user so a PK conflict can't mask the RLS verdict
+//   5. the recovery insert DOES restore A's own missing row, and the
+//      recreated row starts with onboarded_at null (stamp stays guarded)
+//   6. B's row is byte-identical after A's attempts (service-role read)
+//   7. positive control — the update shape DOES land on A's own row
 //
 // usage: npx tsx scripts/persona-two-account-probe.mts   (requires `supabase start`)
 import { readFileSync } from "node:fs";
@@ -51,6 +56,7 @@ const mintUser = async (tag: string) => {
 
 const A = await mintUser("A");
 const B = await mintUser("B");
+const C = await mintUser("C"); // exists in auth.users, profiles row deleted below
 
 const B_PERSONA = {
   desired_roles: ["b-role"],
@@ -120,7 +126,46 @@ try {
     `rows=${broad.data?.length}, err=${broad.error?.message ?? "none"}`
   );
 
-  // 4 — B unharmed, byte for byte
+  // 4 + 5 — the recovery INSERT (savePersonaAction missing-row path):
+  // exactly { user_id, ...persona columns }, never onboarded_at. C's row
+  // is admin-deleted first, so what rejects the cross-insert must be the
+  // profiles_insert_own policy, not the primary key.
+  const RECOVERY_PERSONA = {
+    desired_roles: ["a-role"],
+    province: "ON",
+    cities: ["Toronto"],
+    remote_preference: "hybrid",
+    seniority: "mid",
+    salary_min_cad: null,
+    salary_max_cad: null,
+  };
+  const delC = await admin.from("profiles").delete().eq("user_id", C.id);
+  if (delC.error) throw new Error(`cannot clear C's row: ${delC.error.message}`);
+  const crossInsert = await asA
+    .from("profiles")
+    .insert({ user_id: C.id, ...RECOVERY_PERSONA })
+    .select("onboarded_at")
+    .single();
+  check(
+    "A cannot recovery-insert a row for another user (42501)",
+    crossInsert.error !== null && crossInsert.error.code === "42501",
+    crossInsert.error ? crossInsert.error.code : "INSERT SUCCEEDED!"
+  );
+
+  const delA = await admin.from("profiles").delete().eq("user_id", A.id);
+  if (delA.error) throw new Error(`cannot clear A's row: ${delA.error.message}`);
+  const ownInsert = await asA
+    .from("profiles")
+    .insert({ user_id: A.id, ...RECOVERY_PERSONA })
+    .select("onboarded_at")
+    .single();
+  check(
+    "recovery insert restores A's OWN missing row, onboarded_at starts null",
+    !ownInsert.error && ownInsert.data?.onboarded_at === null,
+    ownInsert.error ? ownInsert.error.message : `onboarded_at=${ownInsert.data?.onboarded_at}`
+  );
+
+  // 6 — B unharmed, byte for byte
   const after = await admin
     .from("profiles")
     .select("desired_roles, province, cities, remote_preference, seniority, onboarded_at")
@@ -132,7 +177,7 @@ try {
     JSON.stringify(after.data)
   );
 
-  // 5 — positive control: RLS filters, it doesn't block the owner
+  // 7 — positive control: RLS filters, it doesn't block the owner
   const own = await asA
     .from("profiles")
     .update({
@@ -149,6 +194,7 @@ try {
 } finally {
   await admin.auth.admin.deleteUser(A.id);
   await admin.auth.admin.deleteUser(B.id);
+  await admin.auth.admin.deleteUser(C.id);
 }
 
 console.log(
