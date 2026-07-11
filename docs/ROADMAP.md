@@ -55,16 +55,16 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 ## Phase 1 — Core loop on fake data (est. 2–3 weeks) · notes: [[brainstorm/phase-1-core-loop]]
 
 ### 1.1 Auth
-- [ ] Supabase Auth: email/password + Google OAuth
-- [ ] Auth pages (sign in/up/out) + protected routes middleware
-- [ ] Email verification: enable "confirm email" in Supabase Auth; customize the email template (Sartor branding, correct redirect URL); unverified users blocked by middleware and shown a "check your inbox" screen with a resend button
-- [ ] Manual test of the verification flow: sign up → receive email → confirm → access granted; unconfirmed account stays blocked. NOTE: Supabase's built-in sender is rate-limited (dev only) — production SMTP is a Phase 5 task
-- [ ] `profiles` row auto-created on signup (trigger)
-- [ ] Manual RLS test with two accounts: A cannot read B's profile
-- [ ] Zod schemas for all API route inputs and forms (pattern established here, reused everywhere)
-- [ ] CI from day one: GitHub Actions runs typecheck + lint on every push (fixture tests join in Phase 3)
-- [ ] Sentry (app) from Phase 1 — free tier, DSN in env vars; worker Sentry joins in Phase 2 when the worker exists
-- [ ] Registration form: full name, email, OPTIONAL phone, 16+ age confirmation — PIPEDA-minimized, NO full DOB — Zod-validated
+- [ ] Supabase Auth: email/password + Google OAuth (email/password DONE + proven; Google OAuth deferred to a 1.1 follow-up per Adnane 2026-07-10)
+- [x] Auth pages (sign in/up/out) + protected routes middleware
+- [x] Email verification: enable "confirm email" in Supabase Auth; customize the email template (Sartor branding, correct redirect URL); unverified users blocked by middleware and shown a "check your inbox" screen with a resend button
+- [x] Manual test of the verification flow: sign up → receive email → confirm → access granted; unconfirmed account stays blocked. NOTE: Supabase's built-in sender is rate-limited (dev only) — production SMTP is a Phase 5 task
+- [x] `profiles` row auto-created on signup (trigger)
+- [x] Manual RLS test with two accounts: A cannot read B's profile (GATE 2 passed 2026-07-10: 8 behavioral checks green, both directions)
+- [x] Zod schemas for all API route inputs and forms (pattern established here, reused everywhere)
+- [x] CI from day one: GitHub Actions runs typecheck + lint on every push (fixture tests join in Phase 3)
+- [ ] Sentry (app) from Phase 1 — free tier, DSN in env vars; worker Sentry joins in Phase 2 when the worker exists (code wired server+edge+client, no-ops without DSN; box closes when Adnane's DSN lands)
+- [x] Registration form: full name, email, OPTIONAL phone, 16+ age confirmation — PIPEDA-minimized, NO full DOB — Zod-validated
 
 ### 1.2 Onboarding / persona
 - [ ] Static provinces→cities JSON dataset (10 provinces + 3 territories, GeoNames-derived) — BEFORE the onboarding UI that consumes it
