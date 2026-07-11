@@ -56,7 +56,7 @@ Maintain a committed `.env.example` listing every variable name with a placehold
 - Phase 3: Upstash Redis URL + token (rate limiting on upload/tailoring endpoints starts here, not Phase 5)
 - Phase 5: production-grade hosted Supabase config (or upgrade of the Phase 0 free-tier project), hosted LLM key (e.g. Anthropic), SMTP provider API key (Resend/Postmark, for Supabase Auth custom SMTP) → Vercel/Railway env dashboards, never files. Sentry DSNs and Upstash were provisioned in Phases 1–3; Phase 5 only VERIFIES they're set in prod
 - Post-launch: Stripe publishable + secret + webhook secret
-Only `NEXT_PUBLIC_`-prefixed vars may reach the client; of the above, only the Supabase anon key qualifies.
+Only `NEXT_PUBLIC_`-prefixed vars may reach the client; of the above, only the Supabase anon key and the Sentry DSN (`NEXT_PUBLIC_SENTRY_DSN` — DSNs are publishable ingest keys, not secrets; amended 2026-07-10) qualify.
 
 ## Where things are
 - Product spec: `docs/PRD.md`
