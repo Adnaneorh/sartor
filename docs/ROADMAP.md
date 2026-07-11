@@ -55,7 +55,7 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 ## Phase 1 — Core loop on fake data (est. 2–3 weeks) · notes: [[brainstorm/phase-1-core-loop]]
 
 ### 1.1 Auth
-- [ ] Supabase Auth: email/password + Google OAuth (email/password DONE + proven; Google OAuth deferred to a 1.1 follow-up per Adnane 2026-07-10)
+- [ ] Supabase Auth: email/password + Google OAuth (email/password DONE + proven; Google OAuth deferred to a 1.1 follow-up per Adnane 2026-07-10). SECURITY GATE (audit #4): the OAuth callback MUST route its `?next=` through `lib/auth/redirect.ts` `safeRedirectPath()` — the shared same-origin validator the email-confirm/callback handlers already use — and the follow-up must re-run `scripts/open-redirect-probe.mjs` against the real OAuth flow (the callback runs on the victim's OWN session, so an open redirect there is worse than on confirm). Do not ship OAuth without this.
 - [x] Auth pages (sign in/up/out) + protected routes middleware
 - [x] Email verification: enable "confirm email" in Supabase Auth; customize the email template (Sartor branding, correct redirect URL); unverified users blocked by middleware and shown a "check your inbox" screen with a resend button (branding proven LOCALLY; hosted keeps the default template until Phase 5 — the platform requires custom SMTP to edit templates; /auth/confirm handles both link styles)
 - [x] Manual test of the verification flow: sign up → receive email → confirm → access granted; unconfirmed account stays blocked. NOTE: Supabase's built-in sender is rate-limited (dev only) — production SMTP is a Phase 5 task
