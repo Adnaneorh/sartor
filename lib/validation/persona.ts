@@ -5,7 +5,7 @@ import { isCityInProvince, PROVINCE_CODES } from "@/lib/data/canada";
 // lib/validation/auth.ts pattern (golden rule 11). Enum option lists are
 // defined HERE once and feed both the UI pills and the schema — this fixes
 // the free-text remote_preference/seniority the profiles migration left
-// open (DECISION 2, 2026-07-11). Province is STORED AS CODE (e.g. "ON");
+// open (DECISIONS 2026-07-11 §3). Province is STORED AS CODE (e.g. "ON");
 // Phase 2 matching joins on codes, not display names.
 
 export const REMOTE_PREFERENCES = ["remote", "hybrid", "onsite", "any"] as const;
@@ -59,7 +59,7 @@ export const personaSchema = z
     seniority: z.enum(SENIORITY_LEVELS, {
       error: "pick a seniority level",
     }),
-    // salary range is skippable (DECISION 4) — both fields optional
+    // salary range is skippable (DECISIONS 2026-07-11 §5) — both optional
     salary_min_cad: salaryCad,
     salary_max_cad: salaryCad,
   })

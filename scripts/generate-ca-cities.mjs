@@ -14,8 +14,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const SOURCE_URL = "https://download.geonames.org/export/dump/cities5000.zip";
-const MIN_POPULATION = 5000; // DECISION 3 (2026-07-11)
-const MAX_CITIES_PER_PROVINCE = 60; // DECISION 3 (2026-07-11)
+const MIN_POPULATION = 5000; // DECISIONS 2026-07-11 §1
+const MAX_CITIES_PER_PROVINCE = 60; // DECISIONS 2026-07-11 §1
 
 // GeoNames admin1 codes for CA → the 13 postal province/territory codes
 // (10 provinces + 3 territories; "06" is unassigned in GeoNames).

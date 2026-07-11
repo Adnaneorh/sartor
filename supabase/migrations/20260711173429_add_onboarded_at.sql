@@ -1,5 +1,5 @@
 -- profiles.onboarded_at: onboarding completion is an EXPLICIT fact, never
--- inferred from empty persona fields (DECISION 1, 2026-07-11 — a user who
+-- inferred from empty persona fields (DECISIONS 2026-07-11 §4 — a user who
 -- clears their roles in Settings must not be bounced back to onboarding).
 -- NULL = not onboarded → /home redirects to /onboarding (middleware/page).
 -- Stamped by savePersonaAction on first successful onboarding save.

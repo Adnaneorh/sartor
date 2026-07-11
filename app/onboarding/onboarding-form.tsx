@@ -10,7 +10,8 @@ import { savePersonaAction } from "./actions";
 
 // 4-step persona capture (ROADMAP 1.2, Mockup D): highlighter headline per
 // step, progress dots, Enter-to-advance, keycap hints. Roles, location and
-// seniority are required; the salary step is skippable (DECISION 4).
+// seniority are required; the salary step is skippable (DECISIONS
+// 2026-07-11 §5).
 // Client-side gating is UX only — savePersonaAction re-validates everything.
 const STEP_COUNT = 4;
 
