@@ -20,6 +20,7 @@
 
 ## Change log (approved modifications)
 <!-- One dated line per approved change affecting this phase; full spec lives where the pointer says. Claude Code appends here IN THE SAME SESSION as any approved change (CLAUDE.md workflow rule). -->
+- 2026-07-11 · 1.3 hands Phase 2 three ingestion obligations: (a) populate `is_remote`, 3–4 highlight `tags`, and `logo_url` when the source provides one — tag mechanism TBD, see Open questions (new ROADMAP 2.2 task); (b) reproduce the dedup recipe byte-for-byte: sha256 hex of `lower(company)|lower(title)|coalesce(province,'')|lower(coalesce(city,''))`; (c) OWN the dedup conflict/merge policy — `dedup_hash` is a NON-unique index by 1.3 design (two unique constraints would 23505 the first cross-source duplicate), so upserting on (source, external_id) alone will NOT dedup across sources → ROADMAP 2.2, migration 20260711201511, DECISIONS 2026-07-11 (jobs)
 - 2026-07-09 · Worker structure decided: monorepo `worker/` subfolder (Railway root-dir deploy) — removes repo-vs-folder ambiguity → ROADMAP 2.1, CLAUDE.md layout
 - 2026-07-09 · Audit fix: worker Sentry task added to 2.1; worker Sentry DSN added to Phase 2 key inventory → ROADMAP 2.1, CLAUDE.md secrets
 - 2026-07 · Canada-only sources: Adzuna country=ca, Canadian slug seeding, Job Bank terms verification → PRD 3.2
@@ -32,4 +33,5 @@
 
 ## Open questions
 <!-- Unresolved decisions. When answered, log the choice in [[DECISIONS]]. -->
--
+- Tag mechanism for real postings (1.3 hand-off): Greenhouse/Lever/Adzuna payloads don't ship the PRD 3.2 "3–4 highlight tags" (Lever has a recruiter-set tags field, but it's unreliable). Deterministic extraction from title/description, or a new list-validated AI call point (which would need an AI-LAYER §2 entry)? Decide at 2.2; until then real jobs would default to `tags = {}` and cards would show no tag row — which PRD 3.1b makes the no-signal fallback, so this must be answered before 2.2 ships.
+- Dedup conflict policy (1.3 hand-off): on a dedup_hash match from a DIFFERENT source, skip/merge/refresh-last_seen_at? Owns whether the non-unique index gains a constraint later.

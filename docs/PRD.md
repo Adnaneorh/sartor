@@ -50,7 +50,7 @@ Active job seekers **in Canada** (v1 is Canada-only). All ingestion, filters, an
 The app shows only **fresh, accurate, real** postings, defined as **posted 0–10 days ago**:
 1. **At ingestion:** the worker discards any posting whose `posted_at` is older than 10 days at fetch time. Postings with no reliable `posted_at` from the source are excluded — a job with an unknown age cannot be proven fresh.
 2. **Continuously:** a daily worker pass sets `is_fresh = false` on any job whose `posted_at` has aged past 10 days. (Independent of `is_active`, which tracks whether the source still lists it — a job must be BOTH active and fresh to be shown.)
-3. **At query time (defense in depth):** the deck query always includes `WHERE is_active AND posted_at >= now() - interval '10 days'` — even if the worker pass lags, stale jobs can never reach the deck.
+3. **At query time (defense in depth):** the deck query always includes `WHERE is_active AND is_fresh AND posted_at >= now() - interval '10 days'` — even if the worker pass lags, stale jobs can never reach the deck. (Both flags, per item 2 — made explicit 2026-07-11.)
 4. **In the UI:** every card shows relative age ("posted 3 days ago") so freshness is visible, not just enforced.
 5. **At apply-click (validity moment of truth):** before opening or rendering anything, re-verify the job still exists at its source (board API probe for ATS jobs; for easy-lane jobs also re-fetch the live form and diff it against the validated schema). Gone or changed → mark inactive / downgrade to hard on the spot, tell the user, never send them to a dead or mismatched posting.
 
@@ -97,7 +97,7 @@ Modular monolith + one worker:
 ## 5. Data model (core tables)
 - `profiles` — user persona (full name, optional phone, age-confirmed flag, desired roles, province, cities[], remote pref, salary range CAD, seniority, onboarded_at — NULL until onboarding completes; an explicit fact, never inferred from empty fields). Email lives in `auth.users` only — never duplicated into profiles.
 - `personality_profiles` — user_id, scores R/I/A/S/E/C, instrument version, completed_at (absent = skipped)
-- `jobs` — normalized postings (source, external_id, company, title, province, city, salary CAD, description, apply_url, apply_mode easy|hard, occupation_category NOC-family|uncategorized, posted_at, last_seen_at, is_active, is_fresh, dedup_hash)
+- `jobs` — normalized postings (source, external_id, company, title, province, city, is_remote, logo_url — null renders a monogram, salary min/max CAD, description, apply_url, apply_mode easy|hard, occupation_category NOC-family|uncategorized, tags — the 3–4 card highlights, posted_at, last_seen_at, is_active, is_fresh, dedup_hash — non-unique by design: dedup is ingest logic, the upsert identity is source+external_id)
 - `job_sources` — source registry (type, company slug / API config, last_polled, discovered_by manual|scout, status active|watch)
 - `swipes` — user_id, job_id, direction, created_at (unique on user+job)
 - `applications` — user_id, job_id, status saved|applied|interviewing|offer|closed, resume_version_id, notes

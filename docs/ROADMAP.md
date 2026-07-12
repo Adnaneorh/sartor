@@ -2,7 +2,7 @@
 
 Check boxes as tasks complete (Obsidian renders these). One Claude Code session ≈ one sub-phase or less. Each phase ends with a **Definition of Done** — don't start the next phase until it's true.
 
-**Progress: Phase 1 — 1.2 done 2026-07-11 (dataset + onboarding + settings; persona probe green, updated_at audit item closed). Open: 1.1's Google OAuth follow-up (security-gated), 0.1's Obsidian vault step. Next: 1.3 seed jobs.**
+**Progress: Phase 1 — 1.3 done 2026-07-11 (jobs table + RLS + 50 seed jobs; jobs-rls-probe and seed re-run proofs green; profiles ACL retro-hardened, persona probes re-run green). Open: 1.1's Google OAuth follow-up (security-gated), 0.1's Obsidian vault step. Next: 1.4 swipe deck.**
 
 ## Timeline at a glance
 
@@ -35,7 +35,7 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 - [x] Install shadcn/ui; init theme with CSS variables from DESIGN.md (light default + dark "pulse")
 - [x] `next-themes` toggle working; LIGHT default; no flash on load
 - [x] Inter + JetBrains Mono via `next/font`
-- [x] Deploy the skeleton to Vercel on day one (free `.vercel.app` URL, preview deploys per PR). Local dev stays Supabase CLI + Ollama; the deployed shell points at a hosted Supabase FREE-TIER project (created now, seed data only — this becomes the prod project in Phase 5). Catching deploy-only bugs starts NOW, not in Phase 5
+- [x] Deploy the skeleton to Vercel on day one (free `.vercel.app` URL, preview deploys per PR). Local dev stays Supabase CLI + Ollama; the deployed shell points at a hosted Supabase FREE-TIER project (created now; stays EMPTY — schema + seeds reach it only in Phase 5, per the 2026-07-11 option-B decision — and becomes the prod project in Phase 5). Catching deploy-only bugs starts NOW, not in Phase 5
 
 ### 0.3 Local backend
 - [x] Docker Desktop installed (required for Supabase local stack)
@@ -72,8 +72,8 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 - [x] Persona editable later in Settings (done 2026-07-11: `/settings` pre-filled single-page form reusing `components/persona/` fields + the SAME action; DESIGN top nav extracted to `components/top-nav.tsx`, used by home + settings, no streak pill)
 
 ### 1.3 Seed jobs
-- [ ] `jobs` table migration (schema per PRD §5) + RLS: read-only for authenticated users; writes only via service-role (worker)
-- [ ] Seed script: ~50 realistic hand-picked Canadian jobs with real-style descriptions, `posted_at` spread across the LAST 10 DAYS (older seeds would be hidden by the mandatory freshness filter) and refreshable via re-run
+- [x] `jobs` table migration (schema per PRD §5) + RLS: read-only for authenticated users; writes only via service-role (worker) (done 2026-07-11: migration 20260711201511, select-only grant + revoke-then-grant privilege pattern; companion hardening migration 20260711201512 strips the latent default-ACL privileges from profiles)
+- [x] Seed script: 50 realistic hand-written Canadian jobs (fictional companies) with real-style descriptions, `posted_at` spread across the LAST 10 DAYS (older seeds would be hidden by the mandatory freshness filter) and refreshable via re-run (done 2026-07-11: `scripts/seed-jobs.json` + `scripts/seed-jobs.mts`, run-time posted_at, prune-then-upsert, local-host guard; `scripts/jobs-rls-probe.mts` proves the read-only model live)
 
 ### 1.4 Swipe deck
 - [ ] Card component (logo, title, company, location, salary, tags) per DESIGN.md
@@ -114,7 +114,8 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 - [ ] Adzuna API connector with country=ca (Canada only)
 - [ ] Seed slug registry with Canadian companies (verify ATS per company)
 - [ ] Job Bank Canada: verify terms of use; integrate feed if permitted
-- [ ] Dedup via `dedup_hash` (company+title+location); upsert logic
+- [ ] Dedup via `dedup_hash` (company+title+location); upsert logic — OWNS the conflict/merge policy: `dedup_hash` is a non-unique index by 1.3 design, so upserting on (source, external_id) alone will NOT dedup cross-source duplicates; reproduce the 1.3 hash recipe byte-for-byte
+- [ ] Populate `is_remote`, 3–4 highlight `tags`, and `logo_url` (when the source provides one) at ingest — tag mechanism TBD: deterministic extraction from title/description, or a new list-validated AI-LAYER call point if an LLM step proves necessary (decide here, log the choice)
 - [ ] Hourly cron; stale postings marked `is_active=false`
 - [ ] Freshness condition (PRD 3.2b): discard >10-day-old or undated postings at ingest; daily `is_fresh` pass; deck query hard-filters `posted_at >= now() - 10 days`
 - [ ] `occupation_category` at ingest (PRD 3.1b): deterministic title→NOC-family mapping; LLM fallback classifier list-validated (AI call point #8); unmatched → `uncategorized`

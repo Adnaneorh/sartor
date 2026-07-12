@@ -64,4 +64,4 @@ Personality: **light, warm, creative-professional — youthful but mature.** Whi
 ← decline · → save/apply · ↑/Space full role · Z undo · ? shortcuts · ⌘K palette (v1.5)
 
 ## Components
-shadcn/ui base restyled to pill radii. Custom: swipe card + offset panel, vibe ring, marker/highlight spans, diff panel, gap banner, streak pill, tracker status pills, chat bubbles.
+shadcn/ui base restyled to pill radii. Custom: swipe card + offset panel, company-logo monogram (initial on a tint circle whenever `logo_url` is null — every seed job, most Phase 2 sources), vibe ring, marker/highlight spans, diff panel, gap banner, streak pill, tracker status pills, chat bubbles.
