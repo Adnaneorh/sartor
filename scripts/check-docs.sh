@@ -231,6 +231,22 @@ else
   fail "count: dataset codes [$JSON_CODES] != canada.ts PROVINCE_CODES [$TS_CODES]"
 fi
 
+# Seed jobs (1.3): the committed JSON is the source of truth. Its length
+# must equal BOTH ROADMAP claims — the 1.3 seed bullet ("N realistic
+# hand-written") and the Phase 1 DoD ("swipe N seeded jobs").
+SEED_N=$(node -e 'console.log(require("./scripts/seed-jobs.json").length)' 2>/dev/null)
+BULLET_N=$(grep -oE '[0-9]+ realistic hand-written' docs/ROADMAP.md | grep -oE '[0-9]+' | head -n 1)
+DOD_N=$(grep -oE 'swipe [0-9]+ seeded jobs' docs/ROADMAP.md | grep -oE '[0-9]+' | head -n 1)
+if [ -z "$SEED_N" ]; then
+  fail "count: could not read scripts/seed-jobs.json"
+elif [ -z "$BULLET_N" ] || [ -z "$DOD_N" ]; then
+  fail "count: ROADMAP seed-job claims not found (1.3 bullet: '${BULLET_N:-missing}', DoD: '${DOD_N:-missing}')"
+elif [ "$SEED_N" = "$BULLET_N" ] && [ "$SEED_N" = "$DOD_N" ]; then
+  pass "count: seed-jobs.json holds $SEED_N jobs == ROADMAP 1.3 bullet == Phase 1 DoD"
+else
+  fail "count: seed-jobs.json has $SEED_N jobs but ROADMAP claims 1.3 bullet=$BULLET_N, DoD=$DOD_N"
+fi
+
 echo "== 6. Estimate arithmetic =="
 # Per-phase estimates in the ROADMAP timeline table must sum to the stated
 # total: stated max covers the summed max (buffer <= 2 wk); stated min is
