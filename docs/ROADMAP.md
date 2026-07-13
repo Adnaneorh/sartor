@@ -2,7 +2,7 @@
 
 Check boxes as tasks complete (Obsidian renders these). One Claude Code session ≈ one sub-phase or less. Each phase ends with a **Definition of Done** — don't start the next phase until it's true.
 
-**Progress: Phase 1 — 1.3 done 2026-07-11 (jobs table + RLS + 50 seed jobs; jobs-rls-probe and seed re-run proofs green; profiles ACL retro-hardened, persona probes re-run green). Open: 1.1's Google OAuth follow-up (security-gated), 0.1's Obsidian vault step. Next: 1.4 swipe deck.**
+**Progress: Phase 1 — 1.4 done 2026-07-12 (swipe deck: swipes table + user-scoped RLS [no update path], pg_trgm title search, Framer Motion deck with keyboard map + undo, left filter rail; jobs-rls-probe still green, NEW swipes-rls-probe 10/10 + simulate-hole drill green, deck-query freshness/exclusion verified live 20/20). Open: 1.1's Google OAuth follow-up (security-gated), 0.1's Obsidian vault step. Next: 1.5 personality test.**
 
 ## Timeline at a glance
 
@@ -76,13 +76,13 @@ Check boxes as tasks complete (Obsidian renders these). One Claude Code session 
 - [x] Seed script: 50 realistic hand-written Canadian jobs (fictional companies) with real-style descriptions, `posted_at` spread across the LAST 10 DAYS (older seeds would be hidden by the mandatory freshness filter) and refreshable via re-run (done 2026-07-11: `scripts/seed-jobs.json` + `scripts/seed-jobs.mts`, run-time posted_at, prune-then-upsert, local-host guard; `scripts/jobs-rls-probe.mts` proves the read-only model live)
 
 ### 1.4 Swipe deck
-- [ ] Card component (logo, title, company, location, salary, tags) per DESIGN.md
-- [ ] Deck: Framer Motion drag/flick + next-card peek
-- [ ] Keyboard: ← → ↑/Space, Z undo; buttons under deck; `?` shortcuts overlay
-- [ ] Full-description panel/sheet
-- [ ] `swipes` table + RLS; record swipe; swiped jobs excluded from deck; undo works
-- [ ] Left filter rail: province select → cascading city multi-select → remote (Canada) → salary
-- [ ] Position search bar (Postgres full-text / pg_trgm on title) combined with filters
+- [x] Card component (logo, title, company, location, salary, tags) per DESIGN.md (done 2026-07-12: `components/deck/job-card.tsx` — company-initial monogram on mint tint [logo_url null on every seed], title/company/location/salary [mono, accent]/tag pills + relative age "dropped N days ago" [PRD 3.2b#4]; NO vibe ring/lane badge/streak pill per PRD 3.2)
+- [x] Deck: Framer Motion drag/flick + next-card peek (done 2026-07-12: `components/deck/deck.tsx` — x-drag + rotation, flick past offset+velocity threshold commits, next card peeks on the offset MINT panel [DESIGN sig 3]; optimistic swipe with rollback-on-write-failure)
+- [x] Keyboard: ← → ↑/Space, Z undo; buttons under deck; `?` shortcuts overlay (done 2026-07-12: window keydown map ignores form fields + modified combos; skip/full-role/save buttons under the deck [save = the one saturated object]; `components/deck/shortcuts-overlay.tsx`)
+- [x] Full-description panel/sheet (done 2026-07-12: `components/deck/description-panel.tsx` — right sheet, ↑/Space/click opens, Esc closes, real posting description; no apply button — that's Phase 2.3)
+- [x] `swipes` table + RLS; record swipe; swiped jobs excluded from deck; undo works (done 2026-07-12: migration 20260712161742 — user-scoped RLS, unique(user_id, job_id), NO update path [undo = delete]; `app/home/actions.ts` record/undo [Zod-gated, 23505 = idempotent]; deck query excludes swiped ids; `scripts/swipes-rls-probe.mts` two-account 10/10 + simulate-hole drill)
+- [x] Left filter rail: province select → cascading city multi-select → remote (Canada) → salary (done 2026-07-12: `components/deck/filter-rail.tsx` — filters live in the URL, server re-queries; remote all/remote/on-site [decision 5]; min-salary keeps undisclosed [decision 6]; persona pre-fills a bare /home)
+- [x] Position search bar (Postgres full-text / pg_trgm on title) combined with filters (done 2026-07-12: migration 20260712221230 — pg_trgm + trigram GIN on jobs.title; parameterized `.ilike` with LIKE wildcards escaped [rule 7]; combines with location + salary filters)
 
 ### 1.5 Personality test (RIASEC swipe, skippable)
 - [ ] Bundle O*NET Interest Profiler Short Form items (30, public domain) as static data with instrument version
